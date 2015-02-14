@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Wallyinstall v0.1 - Debian netinstall to #! theme
-# First install debian netinstall, no desktops, login as root (send up at terminal)
+# First install debian netinstall - no desktops, login as root (send up at terminal)
 # Download this script to file:
 #  $ wget http://koti.kapsi.fi/csmr/wally.sh 
 # enable running it with 
@@ -18,16 +18,13 @@ apt-get install apt-listbugs
 
 # Generic
 
-#get compression utilities
-apt-get install unrar unace unalz unzip lzop rzip zip xz-utils arj bzip2
-
 # Desktop
 apt-get install xorg
 apt-get install --no-install-recommends openbox obconf thunar
 
 apt-get install --no-install-recommends lightdm obmenu thunar-volman desktop-base python-xdg tint2 suckless-tools gmrun nitrogen hsetroot conky-all compton
 
-apt-get install --no-install-recommends clipit xfce4-power-manager geany lxappearance xfce4-notifyd libnotify-bin gksu synaptic zenity arandr xinput viewnior geeqie scrot
+apt-get install --no-install-recommends clipit xfce4-power-manager geany lxappearance xfce4-notifyd libnotify-bin gksu synaptic zenity arandr xinput viewnior geeqie scrot vim
 
 apt-get install --no-install-recommends wireless-tools firmware-linux firmware-iwlwifi firmware-ralink firmware-ipw2x00 firmware-realtek intel-microcode amd64-microcode user-setup ntp curl xsel xdotool htop fbxkb
 
@@ -44,7 +41,6 @@ apt-get install vrms
 update-alternatives --set libgksu-gconf-defaults /usr/share/libgksu/debian/gconf-defaults.libgksu-sudo
 update-gconf-defaults
 # Part I - end
-
 
 
 # Part II
@@ -73,20 +69,24 @@ apt-get install cb-lock cb-tint2 crunchbang-wallpapers faenza-crunchbang-icon-th
 
 
 # Part III
+# Enable non-free repo - for unrar and flashplayer
+echo "deb http://ftp.fi.debian.org/debian jessie contrib non-free" > jesrc.list
+mv jesrc.list /etc/apt
 
 # Theming
 
-
-# need unzip for github, so get all compression utilities first
+# need unzip for github, so get all compression utilities first (from non-free)
 apt-get install unrar unace unalz unzip lzop rzip zip xz-utils arj bzip2
+	# ERROR apt-get reports:
+	# package unrar has no installation candidate (from non-free)
 cd ~/downloads
 wget https://github.com/shimmerproject/Greybird/archive/master.zip
-unzip -q master.zip
+unzip -q master.zip # ERROR unzip: command not found
 mv Greybird-master Greybird-git
 wget http://box-look.org/CONTENT/content-files/154075-Greybird.tar.gz
 tar --backup -xf 154075-Greybird.tar.gz
 mv Greybird Greybird-ob
-cp -r Greybird-{git,ob} /usr/share/themes
+cp -r Greybird-{git,ob} /usr/share/themes # ERROR cp: cannot stat 'Graybird-git': No such file or directory
 cd
 
 session-setup-script=/usr/share/tinkerbox/tb-user-setup
@@ -97,6 +97,7 @@ sed 's|^# *session-setup-script= *$|session-setup-script=/usr/share/tinkerbox/tb
 cd
 
 apt-get install iceweasel flashplugin-nonfree gnome-keyring thunar-archive-plugin thunar-media-tags-plugin geany-plugins xfce4-screenshooter xscreensaver
+# ERROR flashplugin has no installation candidate (from non-free)
 # Part III - end
 
 
