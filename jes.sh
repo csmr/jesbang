@@ -3,15 +3,16 @@
 # Wallyinstall v0.1 - Debian netinstall to #! theme
 # - First install debian netinstall - no desktops, only system utilities
 # - Download this script to file:
-#  $ wget http://koti.kapsi.fi/csmr/jes.sh 
-# - enable running it with 
-#  $ chmod +x jes.sh
+#		$ wget http://koti.kapsi.fi/csmr/jes.sh 
+# - enable running it with:
+#		$ chmod +x jes.sh
+# - go superuser (asks root pass):
+#		$ su
 # - and run it with:
-#  $ ./wally.sh
+#		$ ./jes.sh
 
 #Start!
-echo "*** Jesbang install starts! To install, this script needs root -permissions."
-su
+echo "*** Jesbang Wally-modifications install starts! (To install, this script may request root -permissions.)"
 
 # Part I
 apt-get update
@@ -133,6 +134,6 @@ apt-get update
 apt-get -q -y install cb-fortune cb-wmhacks cb-welcome
 # Part V - end
 
+# Done
+echo "*** Jessie Wally-mods done. Restart your computer."
 
-# Finally, start desktop
-startx
