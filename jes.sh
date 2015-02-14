@@ -82,16 +82,14 @@ mv jesrc.list /etc/apt/sources.list.d/jessie.contrib.nonfree.list # todo
 
 # need unzip for github, so get all compression utilities first (from non-free)
 apt-get -q -y install unrar unace unalz unzip lzop rzip zip xz-utils arj bzip2
-	# ERROR apt-get reports:
-	# package unrar has no installation candidate (from non-free)
 cd ~/downloads
 wget https://github.com/shimmerproject/Greybird/archive/master.zip
-unzip -q master.zip # ERROR unzip: command not found
+unzip -q master.zip 
 mv Greybird-master Greybird-git
 wget http://box-look.org/CONTENT/content-files/154075-Greybird.tar.gz
 tar --backup -xf 154075-Greybird.tar.gz
 mv Greybird Greybird-ob
-cp -r Greybird-{git,ob} /usr/share/themes # ERROR cp: cannot stat 'Graybird-git': No such file or directory
+cp -r Greybird-{git,ob} /usr/share/themes 
 cd
 
 session-setup-script=/usr/share/tinkerbox/tb-user-setup
@@ -102,7 +100,7 @@ sed 's|^# *session-setup-script= *$|session-setup-script=/usr/share/tinkerbox/tb
 cd
 
 apt-get -q -y install iceweasel flashplugin-nonfree gnome-keyring thunar-archive-plugin thunar-media-tags-plugin geany-plugins xfce4-screenshooter xscreensaver
-# ERROR flashplugin has no installation candidate (from non-free)
+
 # Part III - end
 
 
