@@ -71,7 +71,7 @@ apt-get install cb-lock cb-tint2 crunchbang-wallpapers faenza-crunchbang-icon-th
 # Part III
 # Enable non-free repo - for unrar and flashplayer
 echo "deb http://ftp.fi.debian.org/debian jessie contrib non-free" > jesrc.list
-mv jesrc.list /etc/apt
+mv jesrc.list /etc/apt/sources.list.d/jessie.contrib.nonfree.list # todo
 
 # Theming
 
