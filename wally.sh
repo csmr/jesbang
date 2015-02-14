@@ -1,40 +1,42 @@
 #!/bin/bash
 
 # Wallyinstall v0.1 - Debian netinstall to #! theme
-# First install debian netinstall - no desktops, login as root (send up at terminal)
-# Download this script to file:
+# - First install debian netinstall - no desktops, only system utilities
+# - login, and go "superuser" (asks for root password)
+#  $ su
+# - Download this script to file:
 #  $ wget http://koti.kapsi.fi/csmr/wally.sh 
-# enable running it with 
+# - enable running it with 
 #  $ sudo chmod +x wally.sh
-# and run it with:
+# - and run it with:
 #  $ ./wally.sh
 
 # Part I
 apt-get update
 apt-get upgrade
-apt-get install policykit-1
+apt-get -q -y install policykit-1
 
-apt-get install apt-listbugs
+apt-get -q -y install apt-listbugs
 
 # Generic
 
 # Desktop
-apt-get install xorg
-apt-get install --no-install-recommends openbox obconf thunar
+apt-get -q -y install xorg
+apt-get -q -y install --no-install-recommends openbox obconf thunar
 
-apt-get install --no-install-recommends lightdm obmenu thunar-volman desktop-base python-xdg tint2 suckless-tools gmrun nitrogen hsetroot conky-all compton
+apt-get -q -y install --no-install-recommends lightdm obmenu thunar-volman desktop-base python-xdg tint2 suckless-tools gmrun nitrogen hsetroot conky-all compton
 
-apt-get install --no-install-recommends clipit xfce4-power-manager geany lxappearance xfce4-notifyd libnotify-bin gksu synaptic zenity arandr xinput viewnior geeqie scrot vim
+apt-get -q -y install --no-install-recommends clipit xfce4-power-manager geany lxappearance xfce4-notifyd libnotify-bin gksu synaptic zenity arandr xinput viewnior geeqie scrot vim
 
-apt-get install --no-install-recommends wireless-tools firmware-linux firmware-iwlwifi firmware-ralink firmware-ipw2x00 firmware-realtek intel-microcode amd64-microcode user-setup ntp curl xsel xdotool htop fbxkb
+apt-get -q -y install --no-install-recommends wireless-tools firmware-linux firmware-iwlwifi firmware-ralink firmware-ipw2x00 firmware-realtek intel-microcode amd64-microcode user-setup ntp curl xsel xdotool htop fbxkb
 
-apt-get install --no-install-recommends fonts-dejavu fonts-droid ttf-freefont ttf-liberation ttf-mscorefonts-installer gdebi gparted file-roller e2fsprogs xfsprogs reiserfsprogs reiser4progs jfsutils ntfs-3g fuse gvfs-fuse fusesmb dmz-cursor-theme gtk2-engines-murrine gtk2-engines-pixbuf gtk2-engines
+apt-get -q -y install --no-install-recommends fonts-dejavu fonts-droid ttf-freefont ttf-liberation ttf-mscorefonts-installer gdebi gparted file-roller e2fsprogs xfsprogs reiserfsprogs reiser4progs jfsutils ntfs-3g fuse gvfs-fuse fusesmb dmz-cursor-theme gtk2-engines-murrine gtk2-engines-pixbuf gtk2-engines
 
 # 
-apt-get install terminator network-manager-gnome network-manager-openvpn-gnome network-manager-pptp-gnome network-manager-vpnc-gnome
+apt-get -q -y install terminator network-manager-gnome network-manager-openvpn-gnome network-manager-pptp-gnome network-manager-vpnc-gnome
 
 # Make sure we have Virtual Richard Stallman aboard!
-apt-get install vrms
+apt-get -q -y install vrms
 
 # sudo style gksu
 # make sure gksu runs in sudo mode
@@ -45,7 +47,7 @@ update-gconf-defaults
 
 # Part II
 #- Set up local apt-repository
-apt-get install dpkg-dev
+apt-get -q -y install dpkg-dev
 mkdir -p /var/local/debs
 # local debs
 echo "deb file:///var/local/debs ./" > walsrc.list
@@ -64,7 +66,7 @@ dpkg-scanpackages . 2>>~/dpkg-scanpackages.log | gzip -c | sudo tee Packages.gz 
 cd
 apt-get update
 
-apt-get install cb-lock cb-tint2 crunchbang-wallpapers faenza-crunchbang-icon-theme tb-configs tb-exit tb-pipemenus tb-user-setup
+apt-get -q -y install cb-lock cb-tint2 crunchbang-wallpapers faenza-crunchbang-icon-theme tb-configs tb-exit tb-pipemenus tb-user-setup
 # Part II - end
 
 
@@ -76,7 +78,7 @@ mv jesrc.list /etc/apt/sources.list.d/jessie.contrib.nonfree.list # todo
 # Theming
 
 # need unzip for github, so get all compression utilities first (from non-free)
-apt-get install unrar unace unalz unzip lzop rzip zip xz-utils arj bzip2
+apt-get -q -y install unrar unace unalz unzip lzop rzip zip xz-utils arj bzip2
 	# ERROR apt-get reports:
 	# package unrar has no installation candidate (from non-free)
 cd ~/downloads
@@ -96,20 +98,20 @@ mv lightdm.conf lightdm.conf-orig
 sed 's|^# *session-setup-script= *$|session-setup-script=/usr/share/tinkerbox/tb-user-setup|' lightdm.conf-orig | sudo tee lightdm.conf >/dev/null
 cd
 
-apt-get install iceweasel flashplugin-nonfree gnome-keyring thunar-archive-plugin thunar-media-tags-plugin geany-plugins xfce4-screenshooter xscreensaver
+apt-get -q -y install iceweasel flashplugin-nonfree gnome-keyring thunar-archive-plugin thunar-media-tags-plugin geany-plugins xfce4-screenshooter xscreensaver
 # ERROR flashplugin has no installation candidate (from non-free)
 # Part III - end
 
 
 # Part IV
 # Media stuff
-apt-get install alsa-base alsa-utils vlc vlc-plugin-notify lame pulseaudio pulseaudio-module-x11 xfce4-mixer xfce4-volumed pavucontrol xfburn volumeicon-alsa
+apt-get -q -y install alsa-base alsa-utils vlc vlc-plugin-notify lame pulseaudio pulseaudio-module-x11 xfce4-mixer xfce4-volumed pavucontrol xfburn volumeicon-alsa
 
 # CLI utilities
-apt-get install bash-completion lintian avahi-utils avahi-daemon libnss-mdns gvfs-bin rsync anacron usbutils wmctrl menu bc screen cowsay figlet whois ftp rpl openssh-client sshfs cpufrequtils xtightvncviewer debconf-utils apt-xapian-index build-essential
+apt-get -q -y install bash-completion lintian avahi-utils avahi-daemon libnss-mdns gvfs-bin rsync anacron usbutils wmctrl menu bc screen cowsay figlet whois ftp rpl openssh-client sshfs cpufrequtils xtightvncviewer debconf-utils apt-xapian-index build-essential
 
 # GTK utilities 
-apt-get install gimp gimp-plugin-registry evince gnumeric galculator gigolo catfish gsimplecal gtrayicon xchat transmission-gtk
+apt-get -q -y install gimp gimp-plugin-registry evince gnumeric galculator gigolo catfish gsimplecal gtrayicon xchat transmission-gtk
 
 # Part IV - end
 
@@ -126,7 +128,7 @@ cd /var/local/debs
 dpkg-scanpackages . 2>>~/dpkg-scanpackages.log | gzip -c | sudo tee Packages.gz >/dev/null
 cd
 apt-get update
-apt-get install cb-fortune cb-wmhacks cb-welcome
+apt-get -q -y install cb-fortune cb-wmhacks cb-welcome
 # Part V - end
 
 
