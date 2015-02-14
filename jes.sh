@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Wallyinstall v0.1 - Debian netinstall to #! theme
+# Wallyinstall v0.2 - Debian netinstall to #! theme
 # - First install debian netinstall - no desktops, only system utilities
 # - Download this script to file:
 #		$ wget http://koti.kapsi.fi/csmr/jes.sh 
@@ -36,10 +36,7 @@ apt-get -q -y install --no-install-recommends wireless-tools firmware-linux firm
 apt-get -q -y install --no-install-recommends fonts-dejavu fonts-droid ttf-freefont ttf-liberation ttf-mscorefonts-installer gdebi gparted file-roller e2fsprogs xfsprogs reiserfsprogs reiser4progs jfsutils ntfs-3g fuse gvfs-fuse fusesmb dmz-cursor-theme gtk2-engines-murrine gtk2-engines-pixbuf gtk2-engines
 
 # 
-apt-get -q -y install terminator network-manager-gnome network-manager-openvpn-gnome network-manager-pptp-gnome network-manager-vpnc-gnome
-
-# Make sure we have Virtual Richard Stallman aboard!
-apt-get -q -y install vrms
+apt-get -q -y install sudo terminator network-manager-gnome network-manager-openvpn-gnome network-manager-pptp-gnome network-manager-vpnc-gnome
 
 # sudo style gksu
 # make sure gksu runs in sudo mode
@@ -131,6 +128,10 @@ cd
 apt-get update
 apt-get -q -y install cb-fortune cb-wmhacks cb-welcome
 # Part V - end
+
+# Make sure we have Virtual Richard Stallman aboard!
+apt-get -q -y install vrms
+vrms
 
 # Done
 echo "*** Jessie Wally-mods done. Restart your computer."
