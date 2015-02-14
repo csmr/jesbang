@@ -2,14 +2,16 @@
 
 # Wallyinstall v0.1 - Debian netinstall to #! theme
 # - First install debian netinstall - no desktops, only system utilities
-# - login, and go "superuser" (asks for root password)
-#  $ su
 # - Download this script to file:
-#  $ wget http://koti.kapsi.fi/csmr/wally.sh 
+#  $ wget http://koti.kapsi.fi/csmr/jes.sh 
 # - enable running it with 
-#  $ sudo chmod +x wally.sh
+#  $ chmod +x jes.sh
 # - and run it with:
 #  $ ./wally.sh
+
+#Start!
+echo "*** Jesbang install starts! To install, this script needs root -permissions."
+su
 
 # Part I
 apt-get update
