@@ -137,7 +137,7 @@ vrms
 # add users to sudoers, so all users can sudo
 echo "%sudo ALL = (ALL) ALL" > sud.tmp
 mv sud.tmp /etc/sudoers.d/all.users
-cowsay -W20 -e "^^" "Sudoing is now enabled for all users."
+/usr/games/cowsay -W20 -e "^^" "Sudoing is now enabled for all users." //games not in roots PATH
 
 # Done
 echo "*** Jessie Wally-mods done. Restart your computer."
