@@ -25,7 +25,7 @@ apt-get -q -y install apt-listbugs
 
 # Desktop
 apt-get -q -y install xorg
-apt-get -q -y install --no-install-recommends openbox obconf thunar
+apt-get -q -y install --no-install-recommends openbox obconf thunar e2fsprogs xfsprogs reiserfsprogs reiser4progs jfsutils ntfs-3g fuse gvfs-fuse fusesmb
 
 apt-get -q -y install --no-install-recommends lightdm obmenu thunar-volman desktop-base python-xdg tint2 suckless-tools gmrun nitrogen hsetroot conky-all compton
 
