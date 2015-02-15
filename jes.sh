@@ -12,6 +12,8 @@
 #		$ ./jes.sh
 
 #Start!
+set -e # exit immediately on error
+
 echo "*** Jesbang Wally-modifications install starts! (To install, this script may request root -permissions.)"
 
 # Part I
