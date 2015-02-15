@@ -133,6 +133,11 @@ apt-get -q -y install cb-fortune cb-wmhacks cb-welcome
 apt-get -q -y install vrms
 vrms
 
+# Custom
+# add users to sudoers, so all users can sudo
+echo "%sudo ALL = (ALL) ALL" > sud.tmp
+mv sud.tem /etc/sudoers.d/all.users
+
 # Done
 echo "*** Jessie Wally-mods done. Restart your computer."
 
