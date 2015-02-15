@@ -11,10 +11,14 @@
 # - and run it with:
 #		$ ./jes.sh
 
-#Start!
-set -e # exit immediately on error
-
 echo "*** Jesbang Wally-modifications install starts! (To install, this script may request root -permissions.)"
+
+#Start!
+if [ "$1" == "--ignore" ]; then
+	echo "-- Ignoring Errors"
+else
+	set -e # exit immediately on error
+fi
 
 # Part I
 apt-get update
@@ -139,7 +143,9 @@ vrms
 # add users to sudoers, so all users can sudo
 echo "%sudo ALL = (ALL) ALL" > sud.tmp
 mv sud.tmp /etc/sudoers.d/all.users
-/usr/games/cowsay -W20 -e "^^" "Sudoing is now enabled for all users." //games not in roots PATH
+
+#games not in roots PATH
+/usr/games/cowsay -W20 -e "^^" "Sudoing is now enabled for all users."
 
 # Done
 echo "*** Jessie Wally-mods done. Restart your computer."
