@@ -136,7 +136,7 @@ vrms
 # Custom
 # add users to sudoers, so all users can sudo
 echo "%sudo ALL = (ALL) ALL" > sud.tmp
-mv sud.tem /etc/sudoers.d/all.users
+mv sud.tmp /etc/sudoers.d/all.users
 echo "Sudoing is now enabled for all users."
 
 # Done
