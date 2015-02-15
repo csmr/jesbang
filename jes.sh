@@ -3,7 +3,7 @@
 # Wallyinstall v0.2 - Debian netinstall to #! theme
 # - First install debian netinstall - no desktops, only system utilities
 # - Download this script to file:
-#		$ wget http://koti.kapsi.fi/csmr/jes.sh 
+#		$ wget http://koti.kapsi.fi/csmr/jes.sh
 # - enable running it with:
 #		$ chmod +x jes.sh
 # - go superuser (asks root pass):
@@ -12,6 +12,8 @@
 #		$ ./jes.sh
 
 #Start!
+set -e # exit immediately on error
+
 echo "*** Jesbang Wally-modifications install starts! (To install, this script may request root -permissions.)"
 
 # Part I
@@ -35,7 +37,7 @@ apt-get -q -y install --no-install-recommends wireless-tools firmware-linux firm
 
 apt-get -q -y install --no-install-recommends fonts-dejavu fonts-droid ttf-freefont ttf-liberation ttf-mscorefonts-installer gdebi gparted file-roller e2fsprogs xfsprogs reiserfsprogs reiser4progs jfsutils ntfs-3g fuse gvfs-fuse fusesmb dmz-cursor-theme gtk2-engines-murrine gtk2-engines-pixbuf gtk2-engines
 
-# 
+#
 apt-get -q -y install sudo terminator network-manager-gnome network-manager-openvpn-gnome network-manager-pptp-gnome network-manager-vpnc-gnome
 
 # sudo style gksu
@@ -52,7 +54,7 @@ mkdir -p /var/local/debs
 # local debs
 echo "deb file:///var/local/debs ./" > walsrc.list
 mv walsrc.list /etc/apt/sources.list.d/debian-wally-sources.list
-mkdir -p ~/downloads/debs 
+mkdir -p ~/downloads/debs
 # get packages
 wget -nd -P ~/downloads/debs http://packages.crunchbang.org/waldorf/pool/main/{cb-lock_0.01_all.deb,cb-tint2_0.01_all.deb,crunchbang-wallpapers_1.0-1_all.deb,faenza-crunchbang-icon-theme_1.2-crunchang1_all.deb}
 wget -P ~/downloads/debs https://dl.dropboxusercontent.com/u/10808732/tinkerbox-debs.tar.gz
@@ -81,12 +83,12 @@ mv jesrc.list /etc/apt/sources.list.d/jessie.contrib.nonfree.list # todo
 apt-get -q -y install unrar unace unalz unzip lzop rzip zip xz-utils arj bzip2
 cd ~/downloads
 wget https://github.com/shimmerproject/Greybird/archive/master.zip
-unzip -q master.zip 
+unzip -q master.zip
 mv Greybird-master Greybird-git
 wget http://box-look.org/CONTENT/content-files/154075-Greybird.tar.gz
 tar --backup -xf 154075-Greybird.tar.gz
 mv Greybird Greybird-ob
-cp -r Greybird-{git,ob} /usr/share/themes 
+cp -r Greybird-{git,ob} /usr/share/themes
 cd
 
 session-setup-script=/usr/share/tinkerbox/tb-user-setup
@@ -108,7 +110,7 @@ apt-get -q -y install alsa-base alsa-utils vlc vlc-plugin-notify lame pulseaudio
 # CLI utilities
 apt-get -q -y install bash-completion lintian avahi-utils avahi-daemon libnss-mdns gvfs-bin rsync anacron usbutils wmctrl menu bc screen cowsay figlet whois ftp rpl openssh-client sshfs cpufrequtils xtightvncviewer debconf-utils apt-xapian-index build-essential
 
-# GTK utilities 
+# GTK utilities
 apt-get -q -y install gimp gimp-plugin-registry evince gnumeric galculator gigolo catfish gsimplecal gtrayicon xchat transmission-gtk
 
 # Part IV - end
@@ -141,4 +143,3 @@ mv sud.tmp /etc/sudoers.d/all.users
 
 # Done
 echo "*** Jessie Wally-mods done. Restart your computer."
-
