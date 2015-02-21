@@ -1,17 +1,15 @@
 #!/bin/bash
 
-jesbang_version="0.3"
+jesbang_version="0.4"
 
 # Jesbang - Debian netinstall to #! theme (cousin of the Wally-project by John Raff)
 #
 # - First install debian netinstall - no desktops, only system utilities
-# - Download this script:
+# 1. Login as root, download this script:
 #     $ wget http://koti.kapsi.fi/csmr/jes.sh
-# - enable exection flag:
+# 2. enable exection flag:
 #     $ chmod +x jes.sh
-# - go superuser (asks root pass):
-#     $ su
-# - and run it:
+# 3. and run it:
 #     $ ./jes.sh
 
 
@@ -110,7 +108,7 @@ apt-get update
 
 # Desktop
 pack_one=(
-  xorg sudo terminator vim-tiny dpkg-dev
+  xorg lightdm terminator vim-tiny dpkg-dev sudo
   network-manager-gnome network-manager-openvpn-gnome
   network-manager-pptp-gnome network-manager-vpnc-gnome
   # need unzip for github, so get all compression utilities (unrar from non-free)
@@ -120,7 +118,7 @@ apt_get_runner "${pack_one[@]}"
 
 aptparams="--no-install-recommends"
 pack_two=(
-  openbox obconf obmenu tint2 lightdm lxappearance 
+  openbox obconf obmenu tint2 lxappearance
   thunar thunar-volman desktop-base compton conky-all clipit 
   e2fsprogs xfsprogs reiserfsprogs reiser4progs 
   jfsutils ntfs-3g fuse gvfs-fuse fusesmb
@@ -144,7 +142,7 @@ update-gconf-defaults | tee -a $log_path
 # Part I - end
 
 
-log "***# Part II"
+log "*** Part II"
 #- Set up local apt-repository
 mkdir -p /var/local/debs 
 # local debs
@@ -167,7 +165,7 @@ apt_get_runner cb-lock cb-tint2 crunchbang-wallpapers faenza-crunchbang-icon-the
 # Part II - end
 
 
-log "***# Part III"
+log "*** Part III"
 # Theming
 
 cd ~/downloads | tee -a $log_path
@@ -198,7 +196,7 @@ apt_get_runner "${pack_three[@]}"
 # Part III - end
 
 
-log "***# Part IV"
+log "*** Part IV"
 pack_four=(
   # Media stuff
   alsa-base alsa-utils vlc vlc-plugin-notify lame pulseaudio pulseaudio-module-x11 
@@ -214,7 +212,7 @@ pack_four=(
 apt_get_runner "${pack_four[@]}"
 # Part IV - end
 
-log "***# Part V"
+log "*** Part V"
 # fortune, wmhacks and welcome -scripts
 wget -nd -P ~/downloads/debs http://packages.crunchbang.org/waldorf/pool/main/{cb-fortune_0.01_all.deb,cb-meta-lamp_0.06_all.deb,cb-meta-libreoffice_0.06_all.deb,cb-meta-packaging_0.06_all.deb,cb-meta-printer-support_0.06_all.deb,cb-meta-ssh_0.06_all.deb,cb-meta-vcs_0.06_all.deb,cb-wmhacks_0.06_all.deb} 
 wget -P ~/downloads/debs https://dl.dropboxusercontent.com/u/10808732/cb-tweaked-debs.tar.gz 
@@ -233,18 +231,22 @@ apt_get_runner vrms
 vrms | tee -a $log_path
 
 # Custom
-# add users to sudoers, so all users can sudo
 
+# add initial user to sudoer group
 user_nick=`getent passwd 1000 | awk -F: '{print $1}'`
-adduser "$user_nick" sudo
-echo "%sudo ALL = (ALL:ALL) ALL" > sud.tmp
+if [ "$user_nick" ]; then
+  adduser "$user_nick" sudo | tee -a $log_path
+fi
+
+# add users to sudoers, so all users can sudo
+echo "%sudo ALL = (ALL:ALL) ALL" > sud.tmp 
 chmod 0440 sud.tmp
 mv sud.tmp /etc/sudoers.d/all.users | tee -a $log_path
 
 #games not in roots PATH
-/usr/games/cowsay -W20 -e "^^" "Sudoing is now enabled for all users." | tee -a $log_path
+/usr/games/cowsay -W20 -e "^^" "Sudoing is now enabled for all users." 
 
 # Done
-echo "*** Jess! Jesbang has made Wally-mods to your Debian Jessie."
+log "*** Jess! Jesbang has made Wally-mods to your Debian Jessie."
 echo "*** You can find logs in '$log_path'"
 echo "Please restart your computer."
