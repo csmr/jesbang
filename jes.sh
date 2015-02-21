@@ -5,21 +5,20 @@ jesbang_version="0.3"
 # Jesbang - Debian netinstall to #! theme (cousin of the Wally-project by John Raff)
 #
 # - First install debian netinstall - no desktops, only system utilities
-# - Download this script to file:
-#   $ wget http://koti.kapsi.fi/csmr/jes.sh
-# - enable running it with:
-#   $ chmod +x jes.sh
+# - Download this script:
+#     $ wget http://koti.kapsi.fi/csmr/jes.sh
+# - enable exection flag:
+#     $ chmod +x jes.sh
 # - go superuser (asks root pass):
-#   $ su
-# - and run it with:
-#   $ ./jes.sh
+#     $ su
+# - and run it:
+#     $ ./jes.sh
 
 
+### Conf
 # log file
 log_path="/tmp/jes-log.txt"
-
-# additional parameters to pass to apt
-apt_get_params=""
+apt_get_params="" # additional parameters to pass to apt
 debug_flag="n"
 bugcheck_flag="n"
 set -e # exit immediately on error
@@ -31,7 +30,7 @@ function apt_get_runner {
     args="-q -y"
     log "Installing $@" 
     apt-get $args $aptparams install $@ | tee -a $log_path
-    log  "Finished Installing $@\n"
+    log "Finished Installing $@\n"
     
     if [ "$debug_flag" == "y" ]; then
         read -p "Press [Enter] key to continue...";
@@ -75,7 +74,7 @@ while [ "$#" -gt 0 ]; do
       debug_flag="y"
       ;;
     *)
-      # unknown option
+      # ignore unknown option
       ;;
   esac
   shift
@@ -83,14 +82,13 @@ done
 
 # Make sure we have elevated privilages, if not exit out
 if [ "$(whoami)" != "root" ]; then
-  echo "Please restart with elevated privilages: run '\$ su' (asks root password) and try again. "
+  echo "Please start as superuser: run '\$ su' (asks root password) and try again. "
   exit 1
 fi
 
 echo "" > $log_path
 log "*** Jesbang starts! Installing Wally-modifications!"
-log "*** You can find logs in '$log_path'"
-
+echo "*** You can find logs in '$log_path'"
 
 log "*** Part I"
 #apt-get update
@@ -104,28 +102,40 @@ if [ "$bugcheck_flag" == "y" ]; then
     apt_get_runner apt-listbugs
 fi
 
-# Generic
 # Enable non-free repo - for unrar and flashplayer
 log "***** ENABLING NON-FREE REPO *****"
-echo "deb http://ftp.ca.debian.org/debian jessie contrib non-free" > jesrc.list
+echo "deb http://http.debian.net/debian jessie contrib non-free" > jesrc.list
 mv jesrc.list /etc/apt/sources.list.d/jessie.contrib.nonfree.list # todo
 apt-get update
 
 # Desktop
-apt_get_runner xorg
+pack_one=(
+  xorg sudo terminator vim-tiny dpkg-dev
+  network-manager-gnome network-manager-openvpn-gnome
+  network-manager-pptp-gnome network-manager-vpnc-gnome
+  # need unzip for github, so get all compression utilities (unrar from non-free)
+  unrar unace unalz unzip lzop rzip zip xz-utils arj bzip2
+)
+apt_get_runner "${pack_one[@]}"
+
 aptparams="--no-install-recommends"
-apt_get_runner openbox obconf thunar e2fsprogs xfsprogs reiserfsprogs reiser4progs jfsutils ntfs-3g fuse gvfs-fuse fusesmb
-
-apt_get_runner lightdm obmenu thunar-volman desktop-base python-xdg tint2 suckless-tools gmrun nitrogen hsetroot conky-all compton
-
-apt_get_runner clipit xfce4-power-manager geany lxappearance xfce4-notifyd libnotify-bin gksu synaptic zenity arandr xinput viewnior geeqie scrot vim
-
-apt_get_runner wireless-tools firmware-linux firmware-iwlwifi firmware-ralink firmware-ipw2x00 firmware-realtek intel-microcode amd64-microcode user-setup ntp curl xsel xdotool htop fbxkb
-
-apt_get_runner fonts-dejavu fonts-droid ttf-freefont ttf-liberation ttf-mscorefonts-installer gdebi gparted file-roller e2fsprogs xfsprogs reiserfsprogs reiser4progs jfsutils ntfs-3g fuse gvfs-fuse fusesmb dmz-cursor-theme gtk2-engines-murrine gtk2-engines-pixbuf gtk2-engines
-
+pack_two=(
+  openbox obconf obmenu tint2 lightdm lxappearance 
+  thunar thunar-volman desktop-base compton conky-all clipit 
+  e2fsprogs xfsprogs reiserfsprogs reiser4progs 
+  jfsutils ntfs-3g fuse gvfs-fuse fusesmb
+  python-xdg suckless-tools gmrun nitrogen hsetroot 
+  xfce4-power-manager xfce4-notifyd libnotify-bin 
+  gksu synaptic zenity arandr xinput scrot wireless-tools 
+  firmware-linux firmware-iwlwifi firmware-ralink firmware-ipw2x00 ntp
+  firmware-realtek intel-microcode amd64-microcode user-setup
+  curl xsel xdotool htop fbxkb viewnior geany 
+  gdebi gparted file-roller dmz-cursor-theme
+  gtk2-engines-murrine gtk2-engines-pixbuf gtk2-engines
+  fonts-dejavu fonts-droid ttf-freefont ttf-liberation ttf-mscorefonts-installer
+)
+apt_get_runner "${pack_two[@]}"
 aptparams=""
-apt_get_runner sudo terminator network-manager-gnome network-manager-openvpn-gnome network-manager-pptp-gnome network-manager-vpnc-gnome
 
 # sudo style gksu
 # make sure gksu runs in sudo mode
@@ -136,8 +146,6 @@ update-gconf-defaults | tee -a $log_path
 
 log "***# Part II"
 #- Set up local apt-repository
-#issues using Tee in here it seems
-apt_get_runner dpkg-dev
 mkdir -p /var/local/debs 
 # local debs
 echo "deb file:///var/local/debs ./" > walsrc.list
@@ -162,8 +170,6 @@ apt_get_runner cb-lock cb-tint2 crunchbang-wallpapers faenza-crunchbang-icon-the
 log "***# Part III"
 # Theming
 
-# need unzip for github, so get all compression utilities first (from non-free)
-apt_get_runner unrar unace unalz unzip lzop rzip zip xz-utils arj bzip2
 cd ~/downloads | tee -a $log_path
 wget https://github.com/shimmerproject/Greybird/archive/master.zip | tee -a $log_path
 unzip -q master.zip | tee -a $log_pathmkdir -p /var/local/debs | tee -a $log_path
@@ -181,22 +187,31 @@ mv lightdm.conf lightdm.conf-orig | tee -a $log_path
 sed 's|^# *session-setup-script= *$|session-setup-script=/usr/share/tinkerbox/tb-user-setup|' lightdm.conf-orig | tee lightdm.conf >/dev/null
 cd
 
-apt_get_runner iceweasel flashplugin-nonfree gnome-keyring thunar-archive-plugin thunar-media-tags-plugin geany-plugins xfce4-screenshooter xscreensaver
+package_three=(
+  iceweasel flashplugin-nonfree gnome-keyring 
+  thunar-archive-plugin thunar-media-tags-plugin
+  geany-plugins xfce4-screenshooter xscreensaver
+)
+apt_get_runner "${pack_three[@]}"
 
 
 # Part III - end
 
 
 log "***# Part IV"
-# Media stuff
-apt_get_runner alsa-base alsa-utils vlc vlc-plugin-notify lame pulseaudio pulseaudio-module-x11 xfce4-mixer xfce4-volumed pavucontrol xfburn volumeicon-alsa
-
-# CLI utilities
-apt_get_runner bash-completion lintian avahi-utils avahi-daemon libnss-mdns gvfs-bin rsync anacron usbutils wmctrl menu bc screen cowsay figlet whois ftp rpl openssh-client sshfs cpufrequtils xtightvncviewer debconf-utils apt-xapian-index build-essential
-
-# GTK utilities
-apt_get_runner gimp gimp-plugin-registry evince gnumeric galculator gigolo catfish gsimplecal gtrayicon xchat transmission-gtk
-
+pack_four=(
+  # Media stuff
+  alsa-base alsa-utils vlc vlc-plugin-notify lame pulseaudio pulseaudio-module-x11 
+  xfce4-mixer xfce4-volumed pavucontrol xfburn volumeicon-alsa
+  # CLI utilities
+  bash-completion lintian avahi-utils avahi-daemon libnss-mdns gvfs-bin rsync
+  anacron usbutils wmctrl menu bc screen cowsay figlet whois ftp rpl openssh-client
+  sshfs cpufrequtils xtightvncviewer debconf-utils apt-xapian-index build-essential
+  # GTK utilities
+  gimp gimp-plugin-registry evince gnumeric galculator gigolo catfish gsimplecal
+  gtrayicon xchat transmission-gtk geeqie 
+)
+apt_get_runner "${pack_four[@]}"
 # Part IV - end
 
 log "***# Part V"
@@ -223,8 +238,9 @@ echo "%sudo ALL = (ALL) ALL" > sud.tmp
 mv sud.tmp /etc/sudoers.d/all.users | tee -a $log_path
 
 #games not in roots PATH
-/usr/games/cowsay -W20 -e "^^" "Sudoing is now enabled for all users."
+/usr/games/cowsay -W20 -e "^^" "Sudoing is now enabled for all users." | tee -a $log_path
 
 # Done
 echo "*** Jess! Jesbang has made Wally-mods to your Debian Jessie."
+echo "*** You can find logs in '$log_path'"
 echo "Please restart your computer."
