@@ -48,27 +48,29 @@ function log {
 
 #Help!
 function show_help {
-    echo 'wally install $jesbang_version'
-	echo "--ignore Do NOT stop on any errors found"
-    echo "--nobugcheck Do NOT install listbugs to check for known issues"
-    echo "--interactive Stop and wait for user after each install piece"
+    echo 'Jesbang - Cousin of Wally - Cruncbang-linux mods installer $jesbang_version'
+		echo "run as root with: $ ./jes.sh [--option [--..]]"
+		echo "Options:"
+		echo "  --ignore - Do NOT stop on any errors found"
+    echo "  --nobugcheck - Do NOT install listbugs to check for known issues"
+    echo "  --interactive - Stop and wait for user after each install piece"
     exit 1
 }
 
 # Handle command line arguments
 while [ "$#" -gt 0 ]; do
-	case $i in
+	case $1 in
 		-h|--help)
 			echo "AAAAArhjh '$1'"
 			show_help
 			exit
 			;;
 		-i|--ignore)
-			echo "-- Ignoring Errors"
+			echo "*** Jesbang -- Ignoring Errors"
 			set +e # ignore errors
 			;;
 		-b|--nobugcheck)
-			echo "-- Ignoring Bug Checking"
+			echo "*** Jesbang -- Ignoring Bug Checking (not implemented)"
 			bugcheck_flag="n"
 			;;
 		-i|--interactive)
