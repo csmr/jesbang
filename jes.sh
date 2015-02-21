@@ -17,7 +17,7 @@ jesbang_version="0.3"
 
 ### Conf
 # log file
-log_path="/tmp/jes-log.txt"
+log_path="./jes-log.txt"
 apt_get_params="" # additional parameters to pass to apt
 debug_flag="n"
 bugcheck_flag="n"
@@ -234,7 +234,11 @@ vrms | tee -a $log_path
 
 # Custom
 # add users to sudoers, so all users can sudo
-echo "%sudo ALL = (ALL) ALL" > sud.tmp
+
+user_nick=`getent passwd 1000 | awk -F: '{print $1}'`
+adduser "$user_nick" sudo
+echo "%sudo ALL = (ALL:ALL) ALL" > sud.tmp
+chmod 0440 sud.tmp
 mv sud.tmp /etc/sudoers.d/all.users | tee -a $log_path
 
 #games not in roots PATH
