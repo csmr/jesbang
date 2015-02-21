@@ -59,7 +59,7 @@ while [ "$#" -gt 0 ]; do
       show_help
       exit
       ;;
-    -i|--ignore)
+    -e|--ignore)
       echo "*** Jesbang -- Ignoring Errors"
       set +e # ignore errors
       ;;
@@ -191,8 +191,6 @@ package_three=(
   geany-plugins xfce4-screenshooter xscreensaver
 )
 apt_get_runner "${pack_three[@]}"
-
-
 # Part III - end
 
 
@@ -212,6 +210,7 @@ pack_four=(
 apt_get_runner "${pack_four[@]}"
 # Part IV - end
 
+
 log "*** Part V"
 # fortune, wmhacks and welcome -scripts
 wget -nd -P ~/downloads/debs http://packages.crunchbang.org/waldorf/pool/main/{cb-fortune_0.01_all.deb,cb-meta-lamp_0.06_all.deb,cb-meta-libreoffice_0.06_all.deb,cb-meta-packaging_0.06_all.deb,cb-meta-printer-support_0.06_all.deb,cb-meta-ssh_0.06_all.deb,cb-meta-vcs_0.06_all.deb,cb-wmhacks_0.06_all.deb} 
@@ -226,11 +225,12 @@ apt-get update
 apt_get_runner cb-fortune cb-wmhacks cb-welcome
 # Part V - end
 
+
+# Custom
+
 # Make sure we have Virtual Richard Stallman aboard!
 apt_get_runner vrms
 vrms | tee -a $log_path
-
-# Custom
 
 # add initial user to sudoer group
 user_nick=`getent passwd 1000 | awk -F: '{print $1}'`
@@ -246,7 +246,8 @@ mv sud.tmp /etc/sudoers.d/all.users | tee -a $log_path
 #games not in roots PATH
 /usr/games/cowsay -W20 -e "^^" "Sudoing is now enabled for all users." 
 
+
 # Done
-log "*** Jess! Jesbang has made Wally-mods to your Debian Jessie."
+log "*** Jess! Jesbang has made (some) Wally-mods to your Debian Jessie."
 echo "*** You can find logs in '$log_path'"
 echo "Please restart your computer."
