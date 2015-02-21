@@ -1,6 +1,6 @@
 ## JESBANG
 
-Adds Crunchbang-like desktop to Debian Jessie.
+Adds Crunchbang-like desktop to Debian Jessie. Not ready, but might get you a desktop. Good luck!
 
 This is a simple script for automagic Crunchbangification of Debian Jessie netinstall. Makes getting from bare desktop-less debian netinstall to a stylish and lightweight #!-themed openbox desktop quick and painless. This script was mostly made from John Ruff's #! forum posts.
 

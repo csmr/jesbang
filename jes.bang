@@ -6,7 +6,7 @@ jesbang_version="0.4"
 #
 # - First install debian netinstall - no desktops, only system utilities
 # 1. Login as root, download this script:
-#     $ wget http://koti.kapsi.fi/csmr/jes.bang
+#     $ wget -nc http://koti.kapsi.fi/csmr/jes.bang
 # 2. enable exection flag:
 #     $ chmod +x jes.bang
 # 3. and run it:
@@ -17,7 +17,7 @@ jesbang_version="0.4"
 # log file
 log_path="./jes-log.txt"
 apt_get_params="" # todo additional parameters to pass to apt
-debug_flag="n"
+interactive_flag="n"
 bugcheck_flag="n"
 set -e # exit immediately on error
 
@@ -25,12 +25,12 @@ set -e # exit immediately on error
 # Function to standardize apt-get calls
 function apt_get_runner {
     # if any arguments were given, add them to apt-get call
-    args="-q -y"
-	log "Installing $*" 
-    apt-get "$args" "$aptparams" install "$@" | tee -a $log_path
+    apt_args="-q -y"
+		log "Installing $*" 
+    apt-get $apt_args $apt_get_params install $@ | tee -a $log_path
     log "Finished Installing $*\n"
     
-    if [ "$debug_flag" == "y" ]; then
+    if [ "$interactive_flag" == "y" ]; then
         read -p "Press [Enter] key to continue...";
     fi
 }
@@ -59,17 +59,17 @@ while [ "$#" -gt 0 ]; do
       show_help
       exit
       ;;
-    -e|--ignore)
+    --ignore)
       echo "*** Jesbang -- Ignoring Errors"
       set +e # ignore errors
       ;;
-    -b|--bugcheck)
+    --bugcheck)
       echo "*** Jesbang -- enable Bug Checking"
       bugcheck_flag="y"
       ;;
-    -i|--interactive)
+    --interactive)
       echo "-- Interactive Mode"
-      debug_flag="y"
+      interactive_flag="y"
       ;;
     *)
       # ignore unknown option
@@ -107,17 +107,17 @@ mv jesrc.list /etc/apt/sources.list.d/jessie.contrib.nonfree.list # todo
 apt-get update
 
 # Desktop
-pack_one=(
+pack_i1=(
   xorg lightdm terminator vim-tiny dpkg-dev sudo
   network-manager-gnome network-manager-openvpn-gnome
   network-manager-pptp-gnome network-manager-vpnc-gnome
   # need unzip for github, so get all compression utilities (unrar from non-free)
   unrar unace unalz unzip lzop rzip zip xz-utils arj bzip2
 )
-apt_get_runner "${pack_one[@]}"
+apt_get_runner "${pack_i1[@]}"
 
-aptparams="--no-install-recommends"
-pack_two=(
+apt_get_params="--no-install-recommends"
+pack_i2=(
   openbox obconf obmenu tint2 lxappearance
   thunar thunar-volman desktop-base compton conky-all clipit 
   e2fsprogs xfsprogs reiserfsprogs reiser4progs 
@@ -132,8 +132,8 @@ pack_two=(
   gtk2-engines-murrine gtk2-engines-pixbuf gtk2-engines
   fonts-dejavu fonts-droid ttf-freefont ttf-liberation ttf-mscorefonts-installer
 )
-apt_get_runner "${pack_two[@]}"
-aptparams=""
+apt_get_runner "${pack_i2[@]}"
+apt_get_params=""
 
 # sudo style gksu
 # make sure gksu runs in sudo mode
@@ -144,14 +144,14 @@ update-gconf-defaults | tee -a $log_path
 
 log "*** Part II"
 #- Set up local apt-repository
-mkdir -p /var/local/debs 
+mkdir -p /var/local/debs | tee -a $log_path
 # local debs
 echo "deb file:///var/local/debs ./" > walsrc.list
 mv walsrc.list /etc/apt/sources.list.d/debian-wally-sources.list 
 mkdir -p ~/downloads/debs 
 # get packages
-wget -nd -P ~/downloads/debs http://packages.crunchbang.org/waldorf/pool/main/{cb-lock_0.01_all.deb,cb-tint2_0.01_all.deb,crunchbang-wallpapers_1.0-1_all.deb,faenza-crunchbang-icon-theme_1.2-crunchang1_all.deb} 
-wget -P ~/downloads/debs https://dl.dropboxusercontent.com/u/10808732/tinkerbox-debs.tar.gz 
+wget -nc -nd -P ~/downloads/debs http://packages.crunchbang.org/waldorf/pool/main/{cb-lock_0.01_all.deb,cb-tint2_0.01_all.deb,crunchbang-wallpapers_1.0-1_all.deb,faenza-crunchbang-icon-theme_1.2-crunchang1_all.deb} 
+wget -nc -P ~/downloads/debs https://dl.dropboxusercontent.com/u/10808732/tinkerbox-debs.tar.gz 
 cd ~/downloads/debs/ 
 tar -xf tinkerbox-debs.tar.gz 
 rm tinkerbox-debs.tar.gz 
@@ -161,7 +161,11 @@ cd /var/local/debs
 dpkg-scanpackages . 2>>~/dpkg-scanpackages.log | gzip -c | tee Packages.gz >/dev/null
 apt-get update 
 
-apt_get_runner cb-lock cb-tint2 crunchbang-wallpapers faenza-crunchbang-icon-theme tb-configs tb-exit tb-pipemenus tb-user-setup
+pack_ii=(
+	cb-lock cb-tint2 crunchbang-wallpapers faenza-crunchbang-icon-theme 
+	tb-configs tb-exit tb-pipemenus tb-user-setup
+)
+apt_get_runner "${pack_ii[@]}"
 # Part II - end
 
 
@@ -169,11 +173,10 @@ log "*** Part III"
 # Theming
 
 cd ~/downloads | tee -a $log_path
-wget https://github.com/shimmerproject/Greybird/archive/master.zip | tee -a $log_path
-unzip -q master.zip | tee -a $log_pathmkdir -p /var/local/debs | tee -a $log_path
-
+wget -nc https://github.com/shimmerproject/Greybird/archive/master.zip | tee -a $log_path
+unzip -q master.zip | tee -a $log_path
 mv Greybird-master Greybird-git | tee -a $log_path
-wget http://box-look.org/CONTENT/content-files/154075-Greybird.tar.gz | tee -a $log_path
+wget -nc http://box-look.org/CONTENT/content-files/154075-Greybird.tar.gz | tee -a $log_path
 tar --backup -xf 154075-Greybird.tar.gz | tee -a $log_path
 mv Greybird Greybird-ob | tee -a $log_path
 cp -r Greybird-{git,ob} /usr/share/themes | tee -a $log_path
@@ -185,17 +188,18 @@ mv lightdm.conf lightdm.conf-orig | tee -a $log_path
 sed 's|^# *session-setup-script= *$|session-setup-script=/usr/share/tinkerbox/tb-user-setup|' lightdm.conf-orig | tee lightdm.conf >/dev/null
 cd
 
-pack_three=(
+pack_iii=(
   iceweasel flashplugin-nonfree gnome-keyring 
   thunar-archive-plugin thunar-media-tags-plugin
   geany-plugins xfce4-screenshooter xscreensaver
 )
-apt_get_runner "${pack_three[@]}"
+apt_get_runner "${pack_iii[@]}" | tee -a $log_path
+
 # Part III - end
 
 
 log "*** Part IV"
-pack_four=(
+pack_iv=(
   # Media stuff
   alsa-base alsa-utils vlc vlc-plugin-notify lame pulseaudio pulseaudio-module-x11 
   xfce4-mixer xfce4-volumed pavucontrol xfburn volumeicon-alsa
@@ -207,14 +211,15 @@ pack_four=(
   gimp gimp-plugin-registry evince gnumeric galculator gigolo catfish gsimplecal
   gtrayicon xchat transmission-gtk geeqie 
 )
-apt_get_runner "${pack_four[@]}"
+apt_get_runner "${pack_iv[@]}" | tee -a $log_path
+
 # Part IV - end
 
 
 log "*** Part V"
 # fortune, wmhacks and welcome -scripts
-wget -nd -P ~/downloads/debs http://packages.crunchbang.org/waldorf/pool/main/{cb-fortune_0.01_all.deb,cb-meta-lamp_0.06_all.deb,cb-meta-libreoffice_0.06_all.deb,cb-meta-packaging_0.06_all.deb,cb-meta-printer-support_0.06_all.deb,cb-meta-ssh_0.06_all.deb,cb-meta-vcs_0.06_all.deb,cb-wmhacks_0.06_all.deb} 
-wget -P ~/downloads/debs https://dl.dropboxusercontent.com/u/10808732/cb-tweaked-debs.tar.gz 
+wget -nc -nd -P ~/downloads/debs http://packages.crunchbang.org/waldorf/pool/main/{cb-fortune_0.01_all.deb,cb-meta-lamp_0.06_all.deb,cb-meta-libreoffice_0.06_all.deb,cb-meta-packaging_0.06_all.deb,cb-meta-printer-support_0.06_all.deb,cb-meta-ssh_0.06_all.deb,cb-meta-vcs_0.06_all.deb,cb-wmhacks_0.06_all.deb} 
+wget -nc -P ~/downloads/debs https://dl.dropboxusercontent.com/u/10808732/cb-tweaked-debs.tar.gz 
 cd ~/downloads/debs/ 
 tar -xf cb-tweaked-debs.tar.gz 
 rm cb-tweaked-debs.tar.gz 
@@ -222,21 +227,29 @@ cp ~/downloads/debs/*.deb /var/local/debs
 cd /var/local/debs 
 dpkg-scanpackages . 2>>~/dpkg-scanpackages.log | gzip -c | tee Packages.gz >/dev/null
 apt-get update 
-apt_get_runner cb-fortune cb-wmhacks cb-welcome
+apt_get_runner cb-fortune | tee -a $log_path
+apt_get_runner cb-wmhacks | tee -a $log_path
+apt_get_runner cb-welcome | tee -a $log_path
 # Part V - end
 
 
 # Custom
 
-# Make sure we have Virtual Richard Stallman aboard!
-apt_get_runner vrms
-vrms | tee -a $log_path
+# clean up
+apt-get $apt_args update 
+apt-get $apt_args upgrade
+apt-get $apt_args autoclean
+apt-get $apt_args autoremove
 
 # add initial user to sudoer group
 user_nick=$(getent passwd 1000 | awk -F: '{print $1}')
 if [ "$user_nick" ]; then
   adduser "$user_nick" sudo | tee -a $log_path
 fi
+
+# Make sure we have Virtual Richard Stallman aboard!
+apt_get_runner vrms
+vrms | tee -a $log_path
 
 # add users to sudoers, so all users can sudo
 echo "%sudo ALL = (ALL:ALL) ALL" > sud.tmp 
@@ -245,7 +258,6 @@ mv sud.tmp /etc/sudoers.d/all.users | tee -a $log_path
 
 #games not in roots PATH
 /usr/games/cowsay -W20 -e "^^" "Sudoing is now enabled for all users." 
-
 
 # Done
 log "*** Jess! Jesbang has made (some) Wally-mods to your Debian Jessie."
