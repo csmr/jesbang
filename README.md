@@ -12,24 +12,24 @@ Prerequisite: Install Debian Jessie -netinstall with only standard system utilit
 
 - download the script with:
 
-	$ wget http://koti.kapsi.fi/csmr/jes.sh
+	$ wget http://koti.kapsi.fi/csmr/jes.bang
 
 
 - enable running the script:
 
-	$ chmod +x jes.sh
+	$ chmod +x jes.bang
 	
 
 - Run:
 
-	$ ./jes.sh
+	$ ./jes.bang
 
 
 Once the script finishes (~10 minutes depending on download speed), restart.
 
 ### Md5 checksum
 
-Every time jes.sh -script is committed, a md5 checksum is calculated to ensure its untampered. You can 'apt-get install md5sum' after downloading the script, run 'md5sum jes.sh' and compare that to the checksum recorded in the github-repo md5sum.txt.
+Every time jes.bang -script is committed, a md5 checksum is calculated to ensure its untampered. You can 'apt-get install md5sum' after downloading the script, run 'md5sum jes.bang' and compare that to the checksum recorded in the github-repo md5sum.txt.
 
 ### Options
 	
@@ -41,4 +41,4 @@ Every time jes.sh -script is committed, a md5 checksum is calculated to ensure i
 
 
 - for example, to ignore errors:
-	$ ./jes.sh --ignore
+	$ ./jes.bang --ignore
