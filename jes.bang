@@ -6,17 +6,17 @@ jesbang_version="0.4"
 #
 # - First install debian netinstall - no desktops, only system utilities
 # 1. Login as root, download this script:
-#     $ wget http://koti.kapsi.fi/csmr/jes.sh
+#     $ wget http://koti.kapsi.fi/csmr/jes.bang
 # 2. enable exection flag:
-#     $ chmod +x jes.sh
+#     $ chmod +x jes.bang
 # 3. and run it:
-#     $ ./jes.sh
+#     $ ./jes.bang
 
 
 ### Conf
 # log file
 log_path="./jes-log.txt"
-apt_get_params="" # additional parameters to pass to apt
+apt_get_params="" # todo additional parameters to pass to apt
 debug_flag="n"
 bugcheck_flag="n"
 set -e # exit immediately on error
@@ -26,9 +26,9 @@ set -e # exit immediately on error
 function apt_get_runner {
     # if any arguments were given, add them to apt-get call
     args="-q -y"
-    log "Installing $@" 
-    apt-get $args $aptparams install $@ | tee -a $log_path
-    log "Finished Installing $@\n"
+	log "Installing $*" 
+    apt-get "$args" "$aptparams" install "$@" | tee -a $log_path
+    log "Finished Installing $*\n"
     
     if [ "$debug_flag" == "y" ]; then
         read -p "Press [Enter] key to continue...";
@@ -42,8 +42,8 @@ function log {
 
 #Help!
 function show_help {
-    echo 'Jesbang - Cousin of Wally - Cruncbang-linux mods installer $jesbang_version'
-    echo "run as root with: $ ./jes.sh [--option [--..]]"
+    echo "Jesbang - Cousin of Wally - Cruncbang-linux mods installer $jesbang_version"
+    echo "run as root with: $ ./jes.bang [--option [--..]]"
     echo "Options:"
     echo "  --ignore - Do NOT stop on any errors found"
     echo "  --nobugcheck - Do NOT install listbugs to check for known issues"
@@ -185,7 +185,7 @@ mv lightdm.conf lightdm.conf-orig | tee -a $log_path
 sed 's|^# *session-setup-script= *$|session-setup-script=/usr/share/tinkerbox/tb-user-setup|' lightdm.conf-orig | tee lightdm.conf >/dev/null
 cd
 
-package_three=(
+pack_three=(
   iceweasel flashplugin-nonfree gnome-keyring 
   thunar-archive-plugin thunar-media-tags-plugin
   geany-plugins xfce4-screenshooter xscreensaver
@@ -233,7 +233,7 @@ apt_get_runner vrms
 vrms | tee -a $log_path
 
 # add initial user to sudoer group
-user_nick=`getent passwd 1000 | awk -F: '{print $1}'`
+user_nick=$(getent passwd 1000 | awk -F: '{print $1}')
 if [ "$user_nick" ]; then
   adduser "$user_nick" sudo | tee -a $log_path
 fi
