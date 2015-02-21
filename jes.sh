@@ -6,25 +6,22 @@ jesbang_version="0.3"
 #
 # - First install debian netinstall - no desktops, only system utilities
 # - Download this script to file:
-#		$ wget http://koti.kapsi.fi/csmr/jes.sh
+#   $ wget http://koti.kapsi.fi/csmr/jes.sh
 # - enable running it with:
-#		$ chmod +x jes.sh
+#   $ chmod +x jes.sh
 # - go superuser (asks root pass):
-#		$ su
+#   $ su
 # - and run it with:
-#		$ ./jes.sh
+#   $ ./jes.sh
 
 
 # log file
-log_path="./jes-log.txt"
-
+log_path="/tmp/jes-log.txt"
 
 # additional parameters to pass to apt
 apt_get_params=""
 debug_flag="n"
-bugcheck_flag="y"
-
-
+bugcheck_flag="n"
 set -e # exit immediately on error
 
 
@@ -33,7 +30,7 @@ function apt_get_runner {
     # if any arguments were given, add them to apt-get call
     args="-q -y"
     log "Installing $@" 
-    apt-get $args $aptparams install $@ | tee -a $logfile
+    apt-get $args $aptparams install $@ | tee -a $log_path
     log  "Finished Installing $@\n"
     
     if [ "$debug_flag" == "y" ]; then
@@ -43,15 +40,15 @@ function apt_get_runner {
 
 # Function to handle logging to the screen and file
 function log {
-    echo -e "$@" | tee -a $logfile
+    echo -e "$@" | tee -a $log_path
 }
 
 #Help!
 function show_help {
     echo 'Jesbang - Cousin of Wally - Cruncbang-linux mods installer $jesbang_version'
-		echo "run as root with: $ ./jes.sh [--option [--..]]"
-		echo "Options:"
-		echo "  --ignore - Do NOT stop on any errors found"
+    echo "run as root with: $ ./jes.sh [--option [--..]]"
+    echo "Options:"
+    echo "  --ignore - Do NOT stop on any errors found"
     echo "  --nobugcheck - Do NOT install listbugs to check for known issues"
     echo "  --interactive - Stop and wait for user after each install piece"
     exit 1
@@ -59,40 +56,40 @@ function show_help {
 
 # Handle command line arguments
 while [ "$#" -gt 0 ]; do
-	case $1 in
-		-h|--help)
-			echo "AAAAArhjh '$1'"
-			show_help
-			exit
-			;;
-		-i|--ignore)
-			echo "*** Jesbang -- Ignoring Errors"
-			set +e # ignore errors
-			;;
-		-b|--nobugcheck)
-			echo "*** Jesbang -- Ignoring Bug Checking (not implemented)"
-			bugcheck_flag="n"
-			;;
-		-i|--interactive)
-			echo "-- Interactive Mode"
-			debug_flag="y"
-			;;
-		*)
-			# unknown option
-			;;
-	esac
-	shift
+  case $1 in
+    -h|--help)
+      echo "AAAAArhjh '$1'"
+      show_help
+      exit
+      ;;
+    -i|--ignore)
+      echo "*** Jesbang -- Ignoring Errors"
+      set +e # ignore errors
+      ;;
+    -b|--bugcheck)
+      echo "*** Jesbang -- enable Bug Checking"
+      bugcheck_flag="y"
+      ;;
+    -i|--interactive)
+      echo "-- Interactive Mode"
+      debug_flag="y"
+      ;;
+    *)
+      # unknown option
+      ;;
+  esac
+  shift
 done
-
-
-log "*** Jesbang starts! Installing Wally-modifications!"
-log "*** You can find logs in '$log_path'"
 
 # Make sure we have elevated privilages, if not exit out
 if [ "$(whoami)" != "root" ]; then
-	echo "Please restart with elevated privilages by executing with sudo."
-	exit 1
+  echo "Please restart with elevated privilages: run '\$ su' (asks root password) and try again. "
+  exit 1
 fi
+
+echo "" > $log_path
+log "*** Jesbang starts! Installing Wally-modifications!"
+log "*** You can find logs in '$log_path'"
 
 
 log "*** Part I"
@@ -127,14 +124,13 @@ apt_get_runner wireless-tools firmware-linux firmware-iwlwifi firmware-ralink fi
 
 apt_get_runner fonts-dejavu fonts-droid ttf-freefont ttf-liberation ttf-mscorefonts-installer gdebi gparted file-roller e2fsprogs xfsprogs reiserfsprogs reiser4progs jfsutils ntfs-3g fuse gvfs-fuse fusesmb dmz-cursor-theme gtk2-engines-murrine gtk2-engines-pixbuf gtk2-engines
 
-#
 aptparams=""
 apt_get_runner sudo terminator network-manager-gnome network-manager-openvpn-gnome network-manager-pptp-gnome network-manager-vpnc-gnome
 
 # sudo style gksu
 # make sure gksu runs in sudo mode
-update-alternatives --set libgksu-gconf-defaults /usr/share/libgksu/debian/gconf-defaults.libgksu-sudo | tee -a $logfile
-update-gconf-defaults | tee -a $logfile
+update-alternatives --set libgksu-gconf-defaults /usr/share/libgksu/debian/gconf-defaults.libgksu-sudo | tee -a $log_path
+update-gconf-defaults | tee -a $log_path
 # Part I - end
 
 
@@ -156,7 +152,7 @@ rm tinkerbox-debs.tar.gz
 cp ~/downloads/debs/*.deb /var/local/debs 
 
 cd /var/local/debs 
-dpkg-scanpackages . 2>>~/dpkg-scanpackages.log | gzip -c | sudo tee Packages.gz >/dev/null
+dpkg-scanpackages . 2>>~/dpkg-scanpackages.log | gzip -c | tee Packages.gz >/dev/null
 apt-get update 
 
 apt_get_runner cb-lock cb-tint2 crunchbang-wallpapers faenza-crunchbang-icon-theme tb-configs tb-exit tb-pipemenus tb-user-setup
@@ -168,21 +164,21 @@ log "***# Part III"
 
 # need unzip for github, so get all compression utilities first (from non-free)
 apt_get_runner unrar unace unalz unzip lzop rzip zip xz-utils arj bzip2
-cd ~/downloads | tee -a $logfile
-wget https://github.com/shimmerproject/Greybird/archive/master.zip | tee -a $logfile
-unzip -q master.zip | tee -a $logfilemkdir -p /var/local/debs | tee -a $logfile
+cd ~/downloads | tee -a $log_path
+wget https://github.com/shimmerproject/Greybird/archive/master.zip | tee -a $log_path
+unzip -q master.zip | tee -a $log_pathmkdir -p /var/local/debs | tee -a $log_path
 
-mv Greybird-master Greybird-git | tee -a $logfile
-wget http://box-look.org/CONTENT/content-files/154075-Greybird.tar.gz | tee -a $logfile
-tar --backup -xf 154075-Greybird.tar.gz | tee -a $logfile
-mv Greybird Greybird-ob | tee -a $logfile
-cp -r Greybird-{git,ob} /usr/share/themes | tee -a $logfile
+mv Greybird-master Greybird-git | tee -a $log_path
+wget http://box-look.org/CONTENT/content-files/154075-Greybird.tar.gz | tee -a $log_path
+tar --backup -xf 154075-Greybird.tar.gz | tee -a $log_path
+mv Greybird Greybird-ob | tee -a $log_path
+cp -r Greybird-{git,ob} /usr/share/themes | tee -a $log_path
 
-session-setup-script=/usr/share/tinkerbox/tb-user-setup | tee -a $logfile
+session-setup-script=/usr/share/tinkerbox/tb-user-setup | tee -a $log_path
 
-cd /etc/lightdm | tee -a $logfile
-mv lightdm.conf lightdm.conf-orig | tee -a $logfile
-sed 's|^# *session-setup-script= *$|session-setup-script=/usr/share/tinkerbox/tb-user-setup|' lightdm.conf-orig | sudo tee lightdm.conf >/dev/null
+cd /etc/lightdm | tee -a $log_path
+mv lightdm.conf lightdm.conf-orig | tee -a $log_path
+sed 's|^# *session-setup-script= *$|session-setup-script=/usr/share/tinkerbox/tb-user-setup|' lightdm.conf-orig | tee lightdm.conf >/dev/null
 cd
 
 apt_get_runner iceweasel flashplugin-nonfree gnome-keyring thunar-archive-plugin thunar-media-tags-plugin geany-plugins xfce4-screenshooter xscreensaver
@@ -212,22 +208,23 @@ tar -xf cb-tweaked-debs.tar.gz
 rm cb-tweaked-debs.tar.gz 
 cp ~/downloads/debs/*.deb /var/local/debs 
 cd /var/local/debs 
-dpkg-scanpackages . 2>>~/dpkg-scanpackages.log | gzip -c | sudo tee Packages.gz >/dev/null
+dpkg-scanpackages . 2>>~/dpkg-scanpackages.log | gzip -c | tee Packages.gz >/dev/null
 apt-get update 
 apt_get_runner cb-fortune cb-wmhacks cb-welcome
 # Part V - end
 
 # Make sure we have Virtual Richard Stallman aboard!
 apt_get_runner vrms
-vrms | tee -a $logfile
+vrms | tee -a $log_path
 
 # Custom
 # add users to sudoers, so all users can sudo
 echo "%sudo ALL = (ALL) ALL" > sud.tmp
-mv sud.tmp /etc/sudoers.d/all.users | tee -a $logfile
+mv sud.tmp /etc/sudoers.d/all.users | tee -a $log_path
 
 #games not in roots PATH
 /usr/games/cowsay -W20 -e "^^" "Sudoing is now enabled for all users."
 
 # Done
-echo "*** Jessie Wally-mods done. Restart your computer."
+echo "*** Jess! Jesbang has made Wally-mods to your Debian Jessie."
+echo "Please restart your computer."
