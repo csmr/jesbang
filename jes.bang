@@ -160,15 +160,12 @@ log "*** Part II"
 # Set up local apt-repository
 mkdir -p /var/local/debs | tee -a $log_path
 echo "deb file:///var/local/debs ./" > /etc/apt/sources.list.d/debian-wally-sources.list 
-mkdir -p ~/downloads/debs 
-cd ~/downloads/debs
+cd /var/local/debs
 
 # desktop themes
 wget -nc -nd -P ~/downloads/debs http://packages.crunchbang.org/waldorf/pool/main/{cb-lock_0.01_all.deb,cb-tint2_0.01_all.deb,crunchbang-wallpapers_1.0-1_all.deb,faenza-crunchbang-icon-theme_1.2-crunchang1_all.deb} 
 curl -s https://dl.dropboxusercontent.com/u/10808732/tinkerbox-debs.tar.gz | tar xz
-cp ~/downloads/debs/*.deb /var/local/debs 
 
-cd /var/local/debs
 dpkg-scanpackages . 2>>~/dpkg-scanpackages.log | gzip -c | tee Packages.gz >/dev/null
 apt-get update 
 
