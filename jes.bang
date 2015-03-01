@@ -1,6 +1,6 @@
 #!/bin/bash
 
-jesbang_version="0.4"
+jesbang_version="0.5"
 
 # Jesbang - Debian netinstall to #! theme (cousin of the Wally-project by John Raff)
 #
@@ -13,7 +13,6 @@ jesbang_version="0.4"
 #     $ ./jes.bang
 
 
-### Conf
 log_path="/tmp/jes-log.txt"
 apt_get_params="" # additional params passed to apt
 interactive_flag="n"
@@ -25,7 +24,7 @@ set -e # exit immediately on error
 function apt_get_runner {
     # if any arguments were given, add them to apt-get call
     apt_args="-q -y"
-		log "Installing $*" 
+    log "Installing $*" 
     apt-get $apt_args $apt_get_params install $@ | tee -a $log_path
     log "Finished Installing $*\n"
     
@@ -43,7 +42,7 @@ function log {
 function show_help {
     echo "Jesbang - Cousin of Wally - a Cruncbang-linux mods installer $jesbang_version
     run as root with:
-	 	# ./jes.bang [--option [--..]]
+    # ./jes.bang [--option [--..]]
 
     Options:
       --ignore - Do NOT stop on any errors found
@@ -101,57 +100,54 @@ fi
 
 # Enable non-free repo - for unrar and flashplayer
 log "***** ENABLING NON-FREE REPO *****"
-echo "deb http://http.debian.net/debian jessie contrib non-free" > jesrc.list
-mv jesrc.list /etc/apt/sources.list.d/jessie.contrib.nonfree.list # todo
+echo "deb http://http.debian.net/debian jessie contrib non-free" > /etc/apt/sources.list.d/jessie.contrib.nonfree.list 
 apt-get update
 
 desktop_pack=(
-  xorg lightdm terminator vim-tiny dpkg-dev sudo
+  xorg lightdm terminator dpkg-dev sudo
   network-manager-gnome network-manager-openvpn-gnome
   network-manager-pptp-gnome network-manager-vpnc-gnome
-  # need unzip for github, so get all compression utilities (unrar from non-free)
+  # need unzip for github, get compression utilities (unrar from non-free)
   unrar unace unalz unzip lzop rzip zip xz-utils arj bzip2
+  # Media stuff
+  alsa-base alsa-utils vlc vlc-plugin-notify lame pulseaudio pulseaudio-module-x11 
+  xfce4-mixer xfce4-volumed pavucontrol xfburn volumeicon-alsa
+  thunar-archive-plugin thunar-media-tags-plugin
+  # CLI utilities
+  bash-completion lintian avahi-utils avahi-daemon libnss-mdns gvfs-bin rsync
+  anacron usbutils wmctrl menu bc screen cowsay figlet whois ftp rpl openssh-client
+  sshfs cpufrequtils xtightvncviewer debconf-utils apt-xapian-index build-essential
+  # GTK utilities
+  gimp gimp-plugin-registry evince gnumeric galculator gigolo catfish gsimplecal
+  gnome-keyring gtrayicon xchat transmission-gtk geeqie 
+  geany geany-plugins xfce4-screenshooter xscreensaver
+  # net stuff
+  iceweasel flashplugin-nonfree net-tools nmap ufw gufw
 )
 apt_get_runner "${desktop_pack[@]}"
 
 apt_get_params="--no-install-recommends"
 desktop_pack_norecs=(
   openbox obconf obmenu tint2 lxappearance
-  thunar thunar-volman desktop-base compton conky-all clipit 
+  thunar thunar-volman desktop-base compton conky-all 
+  xfce4-power-manager xfce4-notifyd libnotify-bin 
+  gtk2-engines-murrine gtk2-engines-pixbuf gtk2-engines
+  # filesys
   e2fsprogs xfsprogs reiserfsprogs reiser4progs 
   jfsutils ntfs-3g fuse gvfs-fuse fusesmb
-  python-xdg suckless-tools gmrun nitrogen hsetroot 
-  xfce4-power-manager xfce4-notifyd libnotify-bin 
-  gksu synaptic zenity arandr xinput scrot wireless-tools 
-	# firmware
+  # firmware
   firmware-linux firmware-iwlwifi firmware-ralink firmware-ipw2x00 ntp
   firmware-realtek intel-microcode amd64-microcode user-setup
-  curl xsel xdotool htop fbxkb viewnior 
+  # utils
+  gksu synaptic zenity arandr xinput scrot wireless-tools 
+  python-xdg suckless-tools gmrun nitrogen hsetroot 
+  clipit curl xsel xdotool htop fbxkb viewnior vim-tiny 
   gdebi gparted file-roller dmz-cursor-theme
-  gtk2-engines-murrine gtk2-engines-pixbuf gtk2-engines
-	# fonts
+  # fonts
   fonts-dejavu fonts-droid ttf-freefont ttf-liberation ttf-mscorefonts-installer
 )
 apt_get_runner "${desktop_pack_norecs[@]}"
 apt_get_params=""
-
-application_packages=(
-  # Media stuff
-  alsa-base alsa-utils vlc vlc-plugin-notify lame pulseaudio pulseaudio-module-x11 
-  xfce4-mixer xfce4-volumed pavucontrol xfburn volumeicon-alsa
-  thunar-archive-plugin thunar-media-tags-plugin
-	# CLI utilities
-  bash-completion lintian avahi-utils avahi-daemon libnss-mdns gvfs-bin rsync
-  anacron usbutils wmctrl menu bc screen cowsay figlet whois ftp rpl openssh-client
-  sshfs cpufrequtils xtightvncviewer debconf-utils apt-xapian-index build-essential
-  # GTK utilities
-  gimp gimp-plugin-registry evince gnumeric galculator gigolo catfish gsimplecal
-	gnome-keyring gtrayicon xchat transmission-gtk geeqie 
-  geany geany-plugins xfce4-screenshooter xscreensaver
-	# net stuff
-  iceweasel flashplugin-nonfree nmap
-)
-apt_get_runner "${application_packages[@]}" | tee -a $log_path
 
 # gksu run in sudo mode
 update-alternatives --set libgksu-gconf-defaults /usr/share/libgksu/debian/gconf-defaults.libgksu-sudo | tee -a $log_path
@@ -165,13 +161,11 @@ log "*** Part II"
 mkdir -p /var/local/debs | tee -a $log_path
 echo "deb file:///var/local/debs ./" > /etc/apt/sources.list.d/debian-wally-sources.list 
 mkdir -p ~/downloads/debs 
+cd ~/downloads/debs
 
 # desktop themes
 wget -nc -nd -P ~/downloads/debs http://packages.crunchbang.org/waldorf/pool/main/{cb-lock_0.01_all.deb,cb-tint2_0.01_all.deb,crunchbang-wallpapers_1.0-1_all.deb,faenza-crunchbang-icon-theme_1.2-crunchang1_all.deb} 
-wget -nc -P ~/downloads/debs https://dl.dropboxusercontent.com/u/10808732/tinkerbox-debs.tar.gz 
-cd ~/downloads/debs/ 
-tar -xf tinkerbox-debs.tar.gz 
-rm tinkerbox-debs.tar.gz 
+curl -s https://dl.dropboxusercontent.com/u/10808732/tinkerbox-debs.tar.gz | tar xz
 cp ~/downloads/debs/*.deb /var/local/debs 
 
 cd /var/local/debs
@@ -179,8 +173,8 @@ dpkg-scanpackages . 2>>~/dpkg-scanpackages.log | gzip -c | tee Packages.gz >/dev
 apt-get update 
 
 crunchbang_pack=(
-	cb-lock cb-tint2 crunchbang-wallpapers faenza-crunchbang-icon-theme 
-	tb-configs tb-exit tb-pipemenus tb-user-setup
+  cb-lock cb-tint2 crunchbang-wallpapers faenza-crunchbang-icon-theme 
+  tb-configs tb-exit tb-pipemenus tb-user-setup
 )
 apt_get_runner "${crunchbang_pack[@]}"
 
@@ -193,30 +187,24 @@ cd ~/downloads | tee -a $log_path
 wget -nc https://github.com/shimmerproject/Greybird/archive/master.zip | tee -a $log_path
 unzip -q master.zip | tee -a $log_path
 mv Greybird-master Greybird-git | tee -a $log_path
-wget -nc http://box-look.org/CONTENT/content-files/154075-Greybird.tar.gz | tee -a $log_path
-tar --backup -xf 154075-Greybird.tar.gz | tee -a $log_path
+curl -s http://box-look.org/CONTENT/content-files/154075-Greybird.tar.gz | tar xz
 mv Greybird Greybird-ob | tee -a $log_path
 cp -r Greybird-{git,ob} /usr/share/themes | tee -a $log_path
 
-
 # Display Manager
-session-setup-script=/usr/share/tinkerbox/tb-user-setup | tee -a $log_path
 cd /etc/lightdm | tee -a $log_path
 mv lightdm.conf lightdm.conf-orig | tee -a $log_path
 sed 's|^# *session-setup-script= *$|session-setup-script=/usr/share/tinkerbox/tb-user-setup|' lightdm.conf-orig | tee lightdm.conf >/dev/null
 cd
 
 # fortune, wmhacks and welcome -scripts
-wget -nc -nd -P ~/downloads/debs http://packages.crunchbang.org/waldorf/pool/main/{cb-fortune_0.01_all.deb,cb-meta-lamp_0.06_all.deb,cb-meta-libreoffice_0.06_all.deb,cb-meta-packaging_0.06_all.deb,cb-meta-printer-support_0.06_all.deb,cb-meta-ssh_0.06_all.deb,cb-meta-vcs_0.06_all.deb,cb-wmhacks_0.06_all.deb} 
-wget -nc -P ~/downloads/debs https://dl.dropboxusercontent.com/u/10808732/cb-tweaked-debs.tar.gz 
-cd ~/downloads/debs/ 
-tar -xf cb-tweaked-debs.tar.gz 
-rm cb-tweaked-debs.tar.gz 
-cp ~/downloads/debs/*.deb /var/local/debs 
 cd /var/local/debs 
+wget -nc -nd -P ~/downloads/debs http://packages.crunchbang.org/waldorf/pool/main/{cb-fortune_0.01_all.deb,cb-meta-lamp_0.06_all.deb,cb-meta-libreoffice_0.06_all.deb,cb-meta-packaging_0.06_all.deb,cb-meta-printer-support_0.06_all.deb,cb-meta-ssh_0.06_all.deb,cb-meta-vcs_0.06_all.deb,cb-wmhacks_0.06_all.deb} 
+curl -s https://dl.dropboxusercontent.com/u/10808732/cb-tweaked-debs.tar.gz | tar xz
 dpkg-scanpackages . 2>>~/dpkg-scanpackages.log | gzip -c | tee Packages.gz >/dev/null
 apt-get update 
 apt_get_runner {cb-fortune,cb-wmhacks,cb-welcome} | tee -a $log_path
+cd
 
 # Part III - end
 
