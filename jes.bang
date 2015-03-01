@@ -1,6 +1,6 @@
 #!/bin/bash
 
-jesbang_version="0.5"
+jesbang_version="0.6"
 
 # Jesbang - Debian netinstall to #! theme (cousin of the Wally-project by John Raff)
 #
@@ -87,8 +87,8 @@ log "*** Jesbang starts! Installing Wally-modifications!"
 echo "*** You can find logs in '$log_path'"
 
 log "*** Part I"
-#apt-get update
-#apt-get upgrade
+apt-get update
+apt-get upgrade
 apt_get_runner policykit-1
 
 if [ "$bugcheck_flag" == "y" ]; then
@@ -180,7 +180,7 @@ apt_get_runner "${crunchbang_pack[@]}"
 
 log "*** Part III"
 # Theming
-cd ~/downloads | tee -a $log_path
+cd /tmp | tee -a $log_path
 wget -nc https://github.com/shimmerproject/Greybird/archive/master.zip | tee -a $log_path
 unzip -q master.zip | tee -a $log_path
 mv Greybird-master Greybird-git | tee -a $log_path
@@ -196,7 +196,7 @@ cd
 
 # fortune, wmhacks and welcome -scripts
 cd /var/local/debs 
-wget -nc -nd -P ~/downloads/debs http://packages.crunchbang.org/waldorf/pool/main/{cb-fortune_0.01_all.deb,cb-meta-lamp_0.06_all.deb,cb-meta-libreoffice_0.06_all.deb,cb-meta-packaging_0.06_all.deb,cb-meta-printer-support_0.06_all.deb,cb-meta-ssh_0.06_all.deb,cb-meta-vcs_0.06_all.deb,cb-wmhacks_0.06_all.deb} 
+wget -nc -nd http://packages.crunchbang.org/waldorf/pool/main/{cb-fortune_0.01_all.deb,cb-meta-lamp_0.06_all.deb,cb-meta-libreoffice_0.06_all.deb,cb-meta-packaging_0.06_all.deb,cb-meta-printer-support_0.06_all.deb,cb-meta-ssh_0.06_all.deb,cb-meta-vcs_0.06_all.deb,cb-wmhacks_0.06_all.deb}
 curl -s https://dl.dropboxusercontent.com/u/10808732/cb-tweaked-debs.tar.gz | tar xz
 dpkg-scanpackages . 2>>~/dpkg-scanpackages.log | gzip -c | tee Packages.gz >/dev/null
 apt-get update 
@@ -207,11 +207,6 @@ cd
 
 
 log "*** Part IV"
-# clean up
-apt-get $apt_args update 
-apt-get $apt_args upgrade
-apt-get $apt_args autoclean
-apt-get $apt_args autoremove
 
 # add initial user to sudoer group
 user_nick=$(getent passwd 1000 | awk -F: '{print $1}')
@@ -225,7 +220,7 @@ chmod 0440 sud.tmp
 mv sud.tmp /etc/sudoers.d/all.users | tee -a $log_path
 
 #games not in roots PATH
-/usr/games/cowsay -W20 -e "^^" "Sudoing is now enabled for all users." 
+/usr/games/cowsay -W20 -e "^^" "Sudoing is now enabled for all (future) users." 
 
 # Make sure we have Virtual Richard Stallman aboard!
 apt_get_runner vrms
