@@ -27,7 +27,7 @@ function apt_get_runner {
     # if any arguments were given, add them to apt-get call
     apt_args="-q -y"
     log "Installing $*" 
-    apt-get $apt_args $apt_get_params install $@ 
+    apt-get "$apt_args" "$apt_get_params" install "$@" 
     log "Finished Installing $*\n"
     
     if [ "$interactive_flag" == "y" ]; then
