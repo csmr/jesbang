@@ -1,6 +1,6 @@
 #!/bin/bash
 
-jesbang_version="0.6"
+jesbang_version="0.1.1"
 
 # Jesbang - Debian netinstall to #! theme (cousin of the Wally-project by John Raff)
 #
@@ -19,13 +19,15 @@ interactive_flag="n"
 bugcheck_flag="n"
 set -e # exit immediately on error
 
+# just log everything
+exec > >(tee $log_path) 2>&1  
 
 # Function to standardize apt-get calls
 function apt_get_runner {
     # if any arguments were given, add them to apt-get call
     apt_args="-q -y"
     log "Installing $*" 
-    apt-get $apt_args $apt_get_params install $@ | tee -a $log_path
+    apt-get $apt_args $apt_get_params install $@ 
     log "Finished Installing $*\n"
     
     if [ "$interactive_flag" == "y" ]; then
@@ -35,7 +37,7 @@ function apt_get_runner {
 
 # Function to handle logging to the screen and file
 function log {
-    echo -e "$@" | tee -a $log_path
+    echo -e "$@"
 }
 
 #Help!
@@ -125,6 +127,8 @@ desktop_pack=(
   iceweasel flashplugin-nonfree net-tools nmap ufw gufw
 )
 apt_get_runner "${desktop_pack[@]}"
+cd 
+
 
 apt_get_params="--no-install-recommends"
 desktop_pack_norecs=(
@@ -149,21 +153,26 @@ desktop_pack_norecs=(
 apt_get_runner "${desktop_pack_norecs[@]}"
 apt_get_params=""
 
-# gksu run in sudo mode
-update-alternatives --set libgksu-gconf-defaults /usr/share/libgksu/debian/gconf-defaults.libgksu-sudo | tee -a $log_path
-update-gconf-defaults | tee -a $log_path
+# temp test for installs
+command -v curl || { echo >&2 "part I install curl fail"; exit 1; }
+command -v nmap || { echo >&2 "part I install nmap fail"; exit 1; }
 
+# gksu run in sudo mode
+update-alternatives --set libgksu-gconf-defaults /usr/share/libgksu/debian/gconf-defaults.libgksu-sudo 
+update-gconf-defaults 
+
+# todo: test installs
 # Part I - end
 
 
 log "*** Part II"
 # Set up local apt-repository
-mkdir -p /var/local/debs | tee -a $log_path
+mkdir -p /var/local/debs 
 echo "deb file:///var/local/debs ./" > /etc/apt/sources.list.d/debian-wally-sources.list 
 cd /var/local/debs
 
 # desktop themes
-wget -nc -nd -P ~/downloads/debs http://packages.crunchbang.org/waldorf/pool/main/{cb-lock_0.01_all.deb,cb-tint2_0.01_all.deb,crunchbang-wallpapers_1.0-1_all.deb,faenza-crunchbang-icon-theme_1.2-crunchang1_all.deb} 
+wget -nc -nd http://packages.crunchbang.org/waldorf/pool/main/{cb-lock_0.01_all.deb,cb-tint2_0.01_all.deb,crunchbang-wallpapers_1.0-1_all.deb,faenza-crunchbang-icon-theme_1.2-crunchang1_all.deb} 
 curl -s https://dl.dropboxusercontent.com/u/10808732/tinkerbox-debs.tar.gz | tar xz
 
 dpkg-scanpackages . 2>>~/dpkg-scanpackages.log | gzip -c | tee Packages.gz >/dev/null
@@ -175,24 +184,27 @@ crunchbang_pack=(
 )
 apt_get_runner "${crunchbang_pack[@]}"
 
+# TODO - test if tb-packages installed, where
+
 # Part II - end
 
 
 log "*** Part III"
 # Theming
-cd /tmp | tee -a $log_path
-wget -nc https://github.com/shimmerproject/Greybird/archive/master.zip | tee -a $log_path
-unzip -q master.zip | tee -a $log_path
-mv Greybird-master Greybird-git | tee -a $log_path
+cd /tmp 
+wget -nc https://github.com/shimmerproject/Greybird/archive/master.zip 
+unzip -q master.zip 
+mv Greybird-master Greybird-git 
 curl -s http://box-look.org/CONTENT/content-files/154075-Greybird.tar.gz | tar xz
-mv Greybird Greybird-ob | tee -a $log_path
-cp -r Greybird-{git,ob} /usr/share/themes | tee -a $log_path
+mv Greybird Greybird-ob 
+cp -r Greybird-{git,ob} /usr/share/themes 
 
 # Display Manager
-cd /etc/lightdm | tee -a $log_path
-mv lightdm.conf lightdm.conf-orig | tee -a $log_path
-sed 's|^# *session-setup-script= *$|session-setup-script=/usr/share/tinkerbox/tb-user-setup|' lightdm.conf-orig | tee lightdm.conf >/dev/null
-cd
+# todo - /usr/share/tinkerbox missing - todo
+# cd /etc/lightdm
+# mv lightdm.conf lightdm.conf-orig 
+# sed 's|^# *session-setup-script= *$|session-setup-script=/usr/share/tinkerbox/tb-user-setup|' lightdm.conf-orig | tee lightdm.conf >/dev/null
+# cd
 
 # fortune, wmhacks and welcome -scripts
 cd /var/local/debs 
@@ -200,7 +212,7 @@ wget -nc -nd http://packages.crunchbang.org/waldorf/pool/main/{cb-fortune_0.01_a
 curl -s https://dl.dropboxusercontent.com/u/10808732/cb-tweaked-debs.tar.gz | tar xz
 dpkg-scanpackages . 2>>~/dpkg-scanpackages.log | gzip -c | tee Packages.gz >/dev/null
 apt-get update 
-apt_get_runner {cb-fortune,cb-wmhacks,cb-welcome} | tee -a $log_path
+apt_get_runner {cb-fortune,cb-wmhacks,cb-welcome} 
 cd
 
 # Part III - end
@@ -211,24 +223,24 @@ log "*** Part IV"
 # add initial user to sudoer group
 user_nick=$(getent passwd 1000 | awk -F: '{print $1}')
 if [ "$user_nick" ]; then
-  adduser "$user_nick" sudo | tee -a $log_path
+  adduser "$user_nick" sudo 
 fi
 
 # add users to sudoers, so all users can sudo
 echo "%sudo ALL = (ALL:ALL) ALL" > sud.tmp 
 chmod 0440 sud.tmp
-mv sud.tmp /etc/sudoers.d/all.users | tee -a $log_path
+mv sud.tmp /etc/sudoers.d/all.users 
 
 #games not in roots PATH
 /usr/games/cowsay -W20 -e "^^" "Sudoing is now enabled for all (future) users." 
 
 # Make sure we have Virtual Richard Stallman aboard!
 apt_get_runner vrms
-vrms | tee -a $log_path
+vrms 
 
 # Part IV - end
 
 # Done
 log "*** Jess! Jesbang has made (some) Wally-mods to your Debian Jessie."
 echo "*** You can find logs in '$log_path'"
-echo "Please restart your computer."
+echo "Please restart your computer. ('shutdown -r now')"
