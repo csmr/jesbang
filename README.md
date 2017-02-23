@@ -12,8 +12,7 @@ Prerequisite: Install Debian Jessie -netinstall with only standard system utilit
 
 - download the script with:
 
-	$ wget http://koti.kapsi.fi/csmr/jes.bang
-
+	$ wget [url where you copied the script]
 
 - enable running the script:
 
