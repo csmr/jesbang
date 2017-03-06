@@ -1,8 +1,8 @@
 ## JESBANG
 
-Adds Crunchbang-like desktop to Debian Jessie. Not ready, but might get you a desktop. Good luck!
+Adds Openbox -bas desktop to Debian Jessie. Not ready, but might get you a desktop. Good luck!
 
-This is a simple script for automagic Crunchbangification of Debian Jessie netinstall. Makes getting from bare desktop-less debian netinstall to a stylish and lightweight #!-themed openbox desktop quick and painless. This script was mostly made from John Ruff's #! forum posts.
+This is a simple script for openbox+utilsfication of Debian Jessie netinstall. Makes getting from bare desktop-less debian netinstall to a lightweight openbox desktop quick and painless. This script was mostly made from John Ruff's #! forum posts.
 
 Prerequisite: Install Debian Jessie -netinstall with only standard system utilities. - no desktop (no Gnome, KDE, etc. under "Software selection"). You may or may not set the root password.
 

@@ -2,7 +2,7 @@
 
 jesbang_version="0.1.1"
 
-# Jesbang - Debian netinstall to #! theme (cousin of the Wally-project by John Raff)
+# Jesbang - Debian netinstall to simple OB desktop
 #
 # - First install debian netinstall - no desktops, only system utilities
 # 1. Login as root, download this script:
@@ -41,7 +41,7 @@ function log {
 
 #Help!
 function show_help {
-    echo "Jesbang - Cousin of Wally - a Cruncbang-linux mods installer $jesbang_version
+    echo "Jesbang - a simple OB desktop installer $jesbang_version
     run as root with:
     # ./jes.bang [--option [--..]]
 
@@ -84,7 +84,7 @@ if [ "$(whoami)" != "root" ]; then
 fi
 
 echo "" > $log_path
-log "*** Jesbang starts! Installing Wally-modifications!"
+log "*** Jesbang starts! Installing base!"
 echo "*** You can find logs in '$log_path'"
 
 log "*** Part I"
@@ -132,7 +132,7 @@ cd
 apt_get_params+=('--no-install-recommends')
 desktop_pack_norecs=(
   openbox obconf obmenu tint2 lxappearance terminator
-  thunar thunar-volman desktop-base compton conky-all 
+  thunar thunar-volman desktop-base compton 
   xfce4-power-manager xfce4-notifyd libnotify-bin 
   gtk2-engines-murrine gtk2-engines-pixbuf gtk2-engines
   # filesys
@@ -147,7 +147,7 @@ desktop_pack_norecs=(
   clipit curl xsel xdotool htop fbxkb viewnior vim-tiny 
   gdebi gparted file-roller dmz-cursor-theme
   # fonts
-  fonts-dejavu fonts-droid ttf-freefont ttf-liberation ttf-mscorefonts-installer
+  fonts-dejavu fonts-droid ttf-freefont ttf-liberation
 )
 apt_get_runner "${desktop_pack_norecs[@]}"
 apt_get_params=()
@@ -165,55 +165,23 @@ update-gconf-defaults
 
 
 log "*** Part II"
-# Set up local apt-repository
-mkdir -p /var/local/debs 
-echo "deb file:///var/local/debs ./" > /etc/apt/sources.list.d/debian-wally-sources.list 
-cd /var/local/debs
-
 # desktop themes
-wget -nc -nd http://packages.crunchbang.org/waldorf/pool/main/{cb-lock_0.01_all.deb,cb-tint2_0.01_all.deb,crunchbang-wallpapers_1.0-1_all.deb,faenza-crunchbang-icon-theme_1.2-crunchang1_all.deb} 
-curl -s https://dl.dropboxusercontent.com/u/10808732/tinkerbox-debs.tar.gz | tar xz
-
-dpkg-scanpackages . 2>>~/dpkg-scanpackages.log | gzip -c | tee Packages.gz >/dev/null
-apt-get update 
-
-crunchbang_pack=(
-	cb-lock cb-tint2 crunchbang-wallpapers faenza-crunchbang-icon-theme 
-  tb-configs tb-exit tb-pipemenus tb-user-setup
-)
-apt_get_runner "${crunchbang_pack[@]}"
-
 # TODO - test if tb-packages installed, where
-# TODO - no, not installed from tb-user-setup some reason, why not? package is there (see logs when time)
 
 # Part II - end
 
 
 log "*** Part III"
-# Theming
-cd /tmp 
-wget -nc https://github.com/shimmerproject/Greybird/archive/master.zip 
-unzip -q master.zip 
-mv Greybird-master Greybird-git 
-curl -s http://box-look.org/CONTENT/content-files/154075-Greybird.tar.gz | tar xz
-mv Greybird Greybird-ob 
-cp -r Greybird-{git,ob} /usr/share/themes 
+# Theming disabled - files no longer hosted
+# cd /tmp 
+# wget -nc https://github.com/shimmerproject/Greybird/archive/master.zip 
+# unzip -q master.zip 
+# cd Greybird-master
+# no build script cp -r Greybird-git /usr/share/themes 
 
 # Display Manager
-# todo - /usr/share/tinkerbox missing - todo
-# cd /etc/lightdm
-# mv lightdm.conf lightdm.conf-orig 
-# sed 's|^# *session-setup-script= *$|session-setup-script=/usr/share/tinkerbox/tb-user-setup|' lightdm.conf-orig | tee lightdm.conf >/dev/null
+# todo# mv lightdm.conf lightdm.conf-orig 
 # cd
-
-# fortune, wmhacks and welcome -scripts
-cd /var/local/debs 
-wget -nc -nd http://packages.crunchbang.org/waldorf/pool/main/{cb-fortune_0.01_all.deb,cb-meta-lamp_0.06_all.deb,cb-meta-libreoffice_0.06_all.deb,cb-meta-packaging_0.06_all.deb,cb-meta-printer-support_0.06_all.deb,cb-meta-ssh_0.06_all.deb,cb-meta-vcs_0.06_all.deb,cb-wmhacks_0.06_all.deb}
-curl -s https://dl.dropboxusercontent.com/u/10808732/cb-tweaked-debs.tar.gz | tar xz
-dpkg-scanpackages . 2>>~/dpkg-scanpackages.log | gzip -c | tee Packages.gz >/dev/null
-apt-get update 
-apt_get_runner {cb-fortune,cb-wmhacks,cb-welcome} 
-cd
 
 # Part III - end
 
@@ -231,16 +199,16 @@ echo "%sudo ALL = (ALL:ALL) ALL" > sud.tmp
 chmod 0440 sud.tmp
 mv sud.tmp /etc/sudoers.d/all.users 
 
-#games not in roots PATH
-/usr/games/cowsay -W20 -e "^^" "Sudoing is now enabled for all (future) users." 
-
 # Make sure we have Virtual Richard Stallman aboard!
 apt_get_runner vrms
 vrms 
 
+#games not in roots PATH
+/usr/games/cowsay -W20 -e "^^" "Sudoing is now enabled for all (future) users." 
+
 # Part IV - end
 
 # Done
-log "*** Jess! Jesbang has made (some) Wally-mods to your Debian Jessie."
+log "*** Jess! Jesbang has installed base to your Debian Jessie."
 echo "*** You can find logs in '$log_path'"
 echo "Please restart your computer. ('shutdown -r now')"
