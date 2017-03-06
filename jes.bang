@@ -6,7 +6,7 @@ jesbang_version="0.1.1"
 #
 # - First install debian netinstall - no desktops, only system utilities
 # 1. Login as root, download this script:
-#     $ wget -nc http://koti.kapsi.fi/csmr/jes.bang
+#     $ wget -nc http://csmr.kapsi.fi/blox/jes.bang
 # 2. enable exection flag:
 #     $ chmod +x jes.bang
 # 3. and run it:
@@ -14,7 +14,7 @@ jesbang_version="0.1.1"
 
 
 log_path="/tmp/jes-log.txt"
-apt_get_params="" # additional params passed to apt
+apt_get_params=() # array of params passed to apt
 interactive_flag="n"
 bugcheck_flag="n"
 set -e # exit immediately on error
@@ -25,7 +25,7 @@ exec > >(tee $log_path) 2>&1
 # Function to standardize apt-get calls
 function apt_get_runner {
     # if any arguments were given, add them to apt-get call
-    apt_args="-q -y"
+    apt_args=(-q -y)
     log "Installing $*" 
     apt-get "$apt_args" "$apt_get_params" install "$@" 
     log "Finished Installing $*\n"
@@ -106,7 +106,7 @@ echo "deb http://http.debian.net/debian jessie contrib non-free" > /etc/apt/sour
 apt-get update
 
 desktop_pack=(
-  xorg lightdm terminator dpkg-dev sudo
+  xorg lightdm dpkg-dev sudo
   network-manager-gnome network-manager-openvpn-gnome
   network-manager-pptp-gnome network-manager-vpnc-gnome
   # need unzip for github, get compression utilities (unrar from non-free)
@@ -130,9 +130,9 @@ apt_get_runner "${desktop_pack[@]}"
 cd 
 
 
-apt_get_params="--no-install-recommends"
+apt_get_params+=('--no-install-recommends')
 desktop_pack_norecs=(
-  openbox obconf obmenu tint2 lxappearance
+  openbox obconf obmenu tint2 lxappearance terminator
   thunar thunar-volman desktop-base compton conky-all 
   xfce4-power-manager xfce4-notifyd libnotify-bin 
   gtk2-engines-murrine gtk2-engines-pixbuf gtk2-engines
@@ -151,7 +151,7 @@ desktop_pack_norecs=(
   fonts-dejavu fonts-droid ttf-freefont ttf-liberation ttf-mscorefonts-installer
 )
 apt_get_runner "${desktop_pack_norecs[@]}"
-apt_get_params=""
+apt_get_params=()
 
 # temp test for installs
 command -v curl || { echo >&2 "part I install curl fail"; exit 1; }
@@ -179,12 +179,13 @@ dpkg-scanpackages . 2>>~/dpkg-scanpackages.log | gzip -c | tee Packages.gz >/dev
 apt-get update 
 
 crunchbang_pack=(
-  cb-lock cb-tint2 crunchbang-wallpapers faenza-crunchbang-icon-theme 
+	cb-lock cb-tint2 crunchbang-wallpapers faenza-crunchbang-icon-theme 
   tb-configs tb-exit tb-pipemenus tb-user-setup
 )
 apt_get_runner "${crunchbang_pack[@]}"
 
 # TODO - test if tb-packages installed, where
+# TODO - no, not installed from tb-user-setup some reason, why not? package is there (see logs when time)
 
 # Part II - end
 
