@@ -14,7 +14,6 @@ jesbang_version="0.1.1"
 
 
 log_path="/tmp/jes-log.txt"
-apt_get_params=() # array of params passed to apt
 interactive_flag="n"
 bugcheck_flag="n"
 set -e # exit immediately on error
@@ -27,7 +26,7 @@ function apt_get_runner {
     # if any arguments were given, add them to apt-get call
     apt_args=(-q -y)
     log "Installing $*" 
-    apt-get "$apt_args" "$apt_get_params" install "$@" 
+    apt-get "${apt_args[@]}" install "$@" 
     log "Finished Installing $*\n"
     
     if [ "$interactive_flag" == "y" ]; then
