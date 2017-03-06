@@ -14,7 +14,6 @@ Prerequisite: Install Debian Jessie -netinstall with only standard system utilit
 
   $ wget -nc http://csmr.kapsi.fi/blox/jes.bang
 
-
 - enable running the script:
 
 	$ chmod +x jes.bang
