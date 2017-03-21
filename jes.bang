@@ -174,7 +174,7 @@ apt_get_params=()
 # temp test for installs
 command -v curl || { echo >&2 "part I install curl fail"; exit 1; }
 command -v nmap || { echo >&2 "part I install nmap fail"; exit 1; }
-command --version ex || { echo >&2 "part I install ex (vim) fail"; exit 1; }
+command -v ex || { echo >&2 "part I install ex (vim) fail"; exit 1; }
 
 # Part I - end
 
@@ -221,6 +221,7 @@ chmod 0440 sud.tmp
 mv sud.tmp /etc/sudoers.d/all.users 
 
 # Log data on how open source the package set is
+echo "*** Non-free packages:"
 vrms 
 
 #games not in roots PATH
