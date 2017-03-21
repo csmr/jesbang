@@ -11,18 +11,18 @@ Get from a bare desktop-less debian -netinstall to a lightweight openbox desktop
 - Once install finishes and restarts, login as root.
 - download the script with:
 
-  $ wget -nc https://raw.githubusercontent.com/csmr/jesbang/master/jes.bang  
+  `$ wget -nc https://raw.githubusercontent.com/csmr/jesbang/master/jes.bang` 
   (original http://csmr.kapsi.fi/blox/jes.bang)
 
 
 - enable running the script (possibly after md5):
 
-	$ chmod +x jes.bang
+	`$ chmod +x jes.bang`
 	
 
 - Run:
 
-	$ ./jes.bang
+	`$ ./jes.bang`
 
 
 Once the script finishes (~10 minutes depending on download speed), restart.
@@ -43,7 +43,7 @@ Every time jes.bang -script is committed, a md5 checksum is calculated to ensure
 
 
 - for example, to ignore errors:
-	$ ./jes.bang --ignore
+	`$ ./jes.bang --ignore`
 
 
 ## Whats it do?
@@ -81,32 +81,32 @@ Every time jes.bang -script is committed, a md5 checksum is calculated to ensure
 	> Preferences > Profile > Show title bar -uncheck
 
 - Firewall on, run gufw in terminal (iptables)
-	$ sudo gufw 
+	`$ sudo gufw`
 	(asks pass)
 
 - Set network connections
-	- Click on connections-icon next to clock, select "Edit connections"
+	- Right-click on connections-icon next to clock, select "Edit connections"
 
 - scan the open ports:
-  $ nmap --allports localhost
+  `$ nmap --allports localhost`
 
 - Create a ssh-key
-	$ ssh-keygen
+	`$ ssh-keygen`
 	(set passphrase)
 
 - browse & install packages
-	$ sudo synaptic
+	`$ sudo synaptic`
 		or
 	Right-click on empty desktop, from ob-menu select:
 	> Debian > Applications > System > Package Management > Synaptic
 
 - Read about neovim and linux news
-	$ iceweasel http://neovim.io http://lwn.net
+	`$ iceweasel http://neovim.io http://lwn.net`
 	
 - install a night-sky planetarium -app:
-	$ sudo apt install stellarium
+	`$ sudo apt install stellarium`
 	and run:
-	$ stellarium &
+	`$ stellarium &`
 
 
 ### Edit Rust/Ruby/Groovy -code in Neovim:
@@ -119,7 +119,7 @@ Every time jes.bang -script is committed, a md5 checksum is calculated to ensure
 	Right click desktop > terminal emulator
 
 	Open neovim
-	$ nvim parser.ru logic.rb server.groovy
+	`$ nvim parser.ru logic.rb server.groovy`
 	:tabnew
 	:b2
 	:Vex (select with arrow keys + enter)
