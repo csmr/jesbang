@@ -66,7 +66,7 @@ desktop_pack_norecs=(
   # utils
   vim-tiny vim-nox mc ranger
   synaptic gdebi file-roller gparted 
-  zenity wmctrl xinputxsel xdotool python-xdg suckless-tools gmrun
+  zenity wmctrl xinput xsel xdotool python-xdg suckless-tools gmrun
   scrot xfce4-screenshooter viewnior hsetroot xscreensaver
   bc gksu fbxkb htop rpl cowsay figlet dmz-cursor-theme
   vrms
