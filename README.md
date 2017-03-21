@@ -48,7 +48,7 @@ Every time jes.bang -script is committed, a md5 checksum is calculated to ensure
 
 ## Whats it do?
 
-###This script
+### This script
 - installs packages listed in a bash-array with apt-get install (see 'jes.bang')
 - writes logs
 - tests if install succeeded (only tests couple of packages)
@@ -57,11 +57,11 @@ Every time jes.bang -script is committed, a md5 checksum is calculated to ensure
 - maybe in future transitions to a Obviux -distro
 
 
-###The packages
+### The packages
 - see 'jes.bang' -file for package lists in `desktop_pack` & `desktop_pack_norecs`.
 
 
-###The desktop
+### The desktop
 - Is Openbox + tint2 on Xorg & lightdm -manager.
 - right click on empty desktop for app menu
 - NeoVim for editor
@@ -69,7 +69,7 @@ Every time jes.bang -script is committed, a md5 checksum is calculated to ensure
 - terminator for terminal: tabs, themes, split panes, jump between pane ctrl+tab
 
 
-###Things to try after install:
+### Things to try after install:
 
 - Play with terminator window
 
@@ -109,7 +109,7 @@ Every time jes.bang -script is committed, a md5 checksum is calculated to ensure
 	$ stellarium &
 
 
-###Edit Rust/Ruby/Groovy -code in Neovim:
+### Edit Rust/Ruby/Groovy -code in Neovim:
 
 - Move to next desktop
 	ctrl + alt + right-arrow
