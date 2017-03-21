@@ -1,6 +1,6 @@
 # JESBANG
 
-Sets Debian Jessien netinstaal with Openbox -base-desktop, including minimum of apps, utils and firmware.
+Sets Debian Jessien netinstall with Openbox -base-desktop, including minimum of apps, utils and firmware.
 
 Get from a bare desktop-less debian -netinstall to a lightweight openbox desktop quickly. This script was mostly made from John Ruff's #! forum posts. Good luck!
 
