@@ -6,7 +6,7 @@ jesbang_version="0.1.4"
 #
 # - First install debian netinstall - no desktops, only system utilities
 # 1. Login as root, download this script:
-#     $ wget -nc http://csmr.kapsi.fi/blox/jes.bang
+#     $ wget -nc https://raw.githubusercontent.com/csmr/jesbang/master/jes.bang
 # 2. enable exection flag:
 #     $ chmod +x jes.bang
 # 3. and run it:
@@ -44,7 +44,7 @@ desktop_pack=(
   # net stuff
   ftp rsync sshfs whois openssh-client
   wireless-tools xchat xtightvncviewer
-  firefox net-tools nmap ufw gufw
+  iceweasel net-tools nmap ufw gufw
   transmission-gtk curl
 
 )

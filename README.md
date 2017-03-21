@@ -11,7 +11,8 @@ Get from a bare desktop-less debian -netinstall to a lightweight openbox desktop
 - Once install finishes and restarts, login as root.
 - download the script with:
 
-  $ wget -nc http://csmr.kapsi.fi/blox/jes.bang
+  $ wget -nc https://raw.githubusercontent.com/csmr/jesbang/master/jes.bang  
+  (original http://csmr.kapsi.fi/blox/jes.bang)
 
 
 - enable running the script (possibly after md5):
