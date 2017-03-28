@@ -64,7 +64,7 @@ Every time jes.bang -script is committed, a md5 checksum is calculated to ensure
 ### The desktop
 - Is Openbox + tint2 on Xorg & lightdm -manager.
 - right click on empty desktop for app menu
-- NeoVim for editor
+- Vim for editor
 - 4 virtual desktops - switch with scroll-up/down on desktop or alt+ctrl+arrow (r/l)
 - terminator for terminal: tabs, themes, split panes, jump between pane ctrl+tab
 
@@ -109,7 +109,7 @@ Every time jes.bang -script is committed, a md5 checksum is calculated to ensure
 	`$ stellarium &`
 
 
-### Edit Rust/Ruby/Groovy -code in Neovim:
+### Edit Rust/Ruby/Groovy -code in vim:
 
 - Move to next desktop
 	ctrl + alt + right-arrow
@@ -118,8 +118,8 @@ Every time jes.bang -script is committed, a md5 checksum is calculated to ensure
 
 	Right click desktop > terminal emulator
 
-	Open neovim
-	`$ nvim parser.ru logic.rb server.groovy`
+	Open vim
+	`$ vim parser.ru logic.rb server.groovy`
 	:tabnew
 	:b2
 	:Vex (select with arrow keys + enter)
