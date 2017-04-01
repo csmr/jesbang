@@ -35,7 +35,6 @@ desktop_pack=(
   xfburn thunar-archive-plugin thunar-media-tags-plugin
   vlc vlc-plugin-notify
 
-
   # GTK utilities
   gimp gimp-plugin-registry geeqie 
   evince gnumeric galculator gigolo catfish gsimplecal
@@ -64,7 +63,7 @@ desktop_pack_norecs=(
   firmware-realtek intel-microcode amd64-microcode user-setup
 
   # utils
-  vim-tiny vim-nox mc ranger
+  vim-tiny vim-nox mc ranger tilda
   synaptic gdebi file-roller gparted 
   zenity wmctrl xinput xsel xdotool python-xdg suckless-tools gmrun
   scrot xfce4-screenshooter viewnior hsetroot xscreensaver
@@ -180,8 +179,13 @@ command -v ex || { echo >&2 "part I install ex (vim) fail"; exit 1; }
 
 log "*** Part II"
 # themes, presets
-# autorun tint2 on openbox startup
+
+# autorun on openbox startup:
 echo "tint2 &" >> /etc/xdg/openbox/autostart
+echo "tilda &" >> /etc/xdg/openbox/autostart
+
+# set tilda to popup with "Menu" -key
+sed -ie 's/^key = ".*"/key = "Menu2"/' .config/tilda/config_0
 
 # gksu run in sudo mode
 update-alternatives --set libgksu-gconf-defaults /usr/share/libgksu/debian/gconf-defaults.libgksu-sudo 
