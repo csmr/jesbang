@@ -4,7 +4,7 @@ Sets Debian Jessien netinstall with Openbox -base-desktop, including minimum of 
 
 Get from a bare desktop-less debian -netinstall to a lightweight openbox desktop quickly. This script was mostly made from John Ruff's #! forum posts. Good luck!
 
-> Note: The current [Debian testing release, Stetch](http://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/weekly-builds/), seems to work well for me. For a dev-box, I recommend trying this on Stretch instead of Jessie. You get new shiny packages like nvim and rust!
+> Note: The current [Debian testing release, Stretch](http://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/weekly-builds/), seems to work well for me. For a dev-box, I recommend trying this on Stretch instead of Jessie. You get new shiny packages like nvim and rust!
 
 
 ## How? 
