@@ -1,40 +1,41 @@
 # JESBANG
 
-Sets Debian Jessien netinstall with Openbox -base-desktop, including minimum of apps, utils and firmware.
-
-Get from a bare desktop-less debian -netinstall to a lightweight openbox desktop quickly. This script was mostly made from John Ruff's #! forum posts. Good luck!
+Quick and clean way from a headless Debian Jessien -netinstall to a Openbox -base-desktop. Includes minimum of apps, utils and firmware, plus instructions in this readme.
 
 > Note: The current [Debian testing release, Stretch](http://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/weekly-builds/), seems to work well for me. For a dev-box, I recommend trying this on Stretch instead of Jessie. You get new shiny packages like nvim and rust!
 
+This script was based on John Ruff's #! forum posts. Thanks and Good luck!
 
 ## How? 
 
-- Install Debian Jessie -netinstall with only 'standard system utilities'. 
-- Don't install desktop (Gnome, KDE, etc). You may or may not set the root password.
+### I. Install base debian
+
+- Install [Debian Jessie from an image](http://cdimage.debian.org/cdimage/release/current/), with only 'standard system utilities'. No need to install desktop.
+- You set the root password, user also.
 - Once install finishes and restarts, login as root.
-- download the script with:
 
-  `$ wget -nc https://raw.githubusercontent.com/csmr/jesbang/master/jes.bang` 
-  (original http://csmr.kapsi.fi/blox/jes.bang)
+### II. Download and checksum
 
+Use the md5-checksum to ensure the downloaded script is untampered - for a security-check, and peace of mind. On every commit of jes.bang -script into a git-repo, a md5 checksum is calculated of the file 'jes.bang'. 
+- (Go as root: `$ su`)
+- Install checksum-util, download jesbang and verify the download: 
+ `# apt-get install md5sum` 
+ `# wget -nc https://raw.githubusercontent.com/csmr/jesbang/master/jes.bang`
+ `# md5sum jes.bang`
 
-- enable running the script (possibly after md5):
+- Compare to [the checksum-file 'md5sum.txt' on Github](http://github.com/csmr/jesbang/blob/master/md5sum.txt)
 
-	`$ chmod +x jes.bang`
-	
+### III. Run script
 
-- Run:
+- If checksums on github and your terminal are identical, enable running the script:
 
-	`$ ./jes.bang`
+	`# chmod +x jes.bang`
 
+- And run
 
-Once the script finishes (~10 minutes depending on download speed), restart.
+	`# ./jes.bang`
 
-
-### Md5 checksum
-
-Every time jes.bang -script is committed, a md5 checksum is calculated to ensure its untampered. You can 'apt-get install md5sum' after downloading the script, run 'md5sum jes.bang' and compare that to the checksum recorded in the github-repo md5sum.txt.
-
+Once the script finishes, restart (~20 minutes depending on cpu/network). The login-manager and the desktop are run - login as user, right-click on desktop for app-menu.
 
 ### Options
 	
@@ -97,11 +98,12 @@ Every time jes.bang -script is committed, a md5 checksum is calculated to ensure
 	`$ ssh-keygen`
 	(set passphrase)
 
-- browse & install packages
-	`$ sudo synaptic`
-		or
+- browse packages:
 	Right-click on empty desktop, from ob-menu select:
 	> Debian > Applications > System > Package Management > Synaptic
+
+- customize your Openbox-desktop settings
+	`$ iceweasel https://urukrama.wordpress.com/openbox-guide/`
 
 - Read about neovim and linux news
 	`$ iceweasel http://neovim.io http://lwn.net`
@@ -131,3 +133,9 @@ Every time jes.bang -script is committed, a md5 checksum is calculated to ensure
 - Get rust - check rustup.rs: 
 	`$ www-browser https://rustup.rs`
 	('q' quits)
+
+## Help with this
+- You can help by testing it. It should work now(TM).
+- It should get better package-install tests cover.
+- The desktop apps need some mentions in readme.
+- It could be made lighter.

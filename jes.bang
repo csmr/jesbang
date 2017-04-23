@@ -44,7 +44,7 @@ desktop_pack=(
   ftp rsync sshfs whois openssh-client
   wireless-tools xchat xtightvncviewer
   iceweasel net-tools nmap ufw gufw
-  transmission-gtk curl
+  transmission-gtk
 
 )
 
@@ -63,7 +63,7 @@ desktop_pack_norecs=(
   firmware-realtek intel-microcode amd64-microcode user-setup
 
   # utils
-  vim-tiny vim-nox mc ranger tilda
+  mc ranger tilda
   synaptic gdebi file-roller gparted 
   zenity wmctrl xinput xsel xdotool python-xdg suckless-tools gmrun
   scrot xfce4-screenshooter viewnior hsetroot xscreensaver
@@ -73,6 +73,8 @@ desktop_pack_norecs=(
   # fonts
   fonts-dejavu fonts-droid ttf-freefont ttf-liberation
 
+	# dev tools
+	git git-svn	curl vim-tiny vim-nox
 )
 log_path="/tmp/jes-log.txt"
 interactive_flag="n"
@@ -102,7 +104,7 @@ function log {
 
 #Help!
 function show_help {
-    echo "Jesbang - a simple OB desktop installer $jesbang_version
+    echo "Jesbang - a OB desktop installer $jesbang_version
     run as root with:
     # ./jes.bang [--option [--..]]
 
@@ -185,7 +187,7 @@ echo "tint2 &" >> /etc/xdg/openbox/autostart
 echo "tilda &" >> /etc/xdg/openbox/autostart
 
 # set tilda to popup with "Menu" -key
-sed -ie 's/^key = ".*"/key = "Menu2"/' .config/tilda/config_0
+sed -ie 's/^key = ".*"/key = "Menu"/' .config/tilda/config_0
 
 # gksu run in sudo mode
 update-alternatives --set libgksu-gconf-defaults /usr/share/libgksu/debian/gconf-defaults.libgksu-sudo 
