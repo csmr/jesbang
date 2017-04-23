@@ -17,23 +17,24 @@ This script was based on John Ruff's #! forum posts. Thanks and Good luck!
 ### II. Download and checksum
 
 Use the md5-checksum to ensure the downloaded script is untampered - for a security-check, and peace of mind. On every commit of jes.bang -script into a git-repo, a md5 checksum is calculated of the file 'jes.bang'. 
-- (Go as root: `$ su`)
+- In terminal, logged as root (Go as root: `$ su`)
 - Install checksum-util, download jesbang and verify the download: 
- `# apt-get install md5sum` 
- `# wget -nc https://raw.githubusercontent.com/csmr/jesbang/master/jes.bang`
- `# md5sum jes.bang`
+```shell
+apt-get install md5sum
+wget -nc https://raw.githubusercontent.com/csmr/jesbang/master/jes.bang
+md5sum jes.bang
+```
 
 - Compare to [the checksum-file 'md5sum.txt' on Github](http://github.com/csmr/jesbang/blob/master/md5sum.txt)
 
 ### III. Run script
 
-- If checksums on github and your terminal are identical, enable running the script:
+- If checksums on github and your terminal are identical, enable running the script, and run it:
 
-	`# chmod +x jes.bang`
-
-- And run
-
-	`# ./jes.bang`
+```shell
+chmod +x jes.bang
+./jes.bang
+```
 
 Once the script finishes, restart (~20 minutes depending on cpu/network). The login-manager and the desktop are run - login as user, right-click on desktop for app-menu.
 
@@ -48,7 +49,6 @@ Once the script finishes, restart (~20 minutes depending on cpu/network). The lo
 
 - for example, to ignore errors:
 	`$ ./jes.bang --ignore`
-
 
 ## Whats it do?
 
