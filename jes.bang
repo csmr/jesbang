@@ -5,8 +5,9 @@ jesbang_version="0.1.4"
 # Jesbang - Debian netinstall to simple OB desktop
 #
 # - First install debian netinstall - no desktops, only system utilities
-# 1. Login as root, download this script:
+# 1. Login as root, download this script
 #     $ wget -nc https://raw.githubusercontent.com/csmr/jesbang/master/jes.bang
+#     $ md5sum jes.bang
 # 2. enable exection flag:
 #     $ chmod +x jes.bang
 # 3. and run it:
@@ -73,9 +74,11 @@ desktop_pack_norecs=(
   # fonts
   fonts-dejavu fonts-droid ttf-freefont ttf-liberation
 
-	# dev tools
-	git git-svn	curl vim-tiny vim-nox
+  # dev tools
+  git git-svn curl vim-tiny vim-nox
+
 )
+
 log_path="/tmp/jes-log.txt"
 interactive_flag="n"
 bugcheck_flag="n"
@@ -86,33 +89,33 @@ exec > >(tee $log_path) 2>&1
 
 # Function to standardize apt-get calls
 function apt_get_runner {
-    # if any arguments were given, add them to apt-get call
-    apt_args=(-q -y)
-    log "Installing $*" 
-    apt-get "${apt_args[@]}" install "$@" 
-    log "Finished Installing $*\n"
-    
-    if [ "$interactive_flag" == "y" ]; then
-        read -p "Press [Enter] key to continue...";
-    fi
+# if any arguments were given, add them to apt-get call
+apt_args=(-q -y)
+log "Installing $*" 
+apt-get "${apt_args[@]}" install "$@" 
+log "Finished Installing $*\n"
+
+if [ "$interactive_flag" == "y" ]; then
+  read -p "Press [Enter] key to continue...";
+fi
 }
 
 # Function to handle logging to the screen and file
 function log {
-    echo -e "$@"
+echo -e "$@"
 }
 
 #Help!
 function show_help {
-    echo "Jesbang - a OB desktop installer $jesbang_version
-    run as root with:
-    # ./jes.bang [--option [--..]]
+echo "Jesbang - a OB desktop installer $jesbang_version
+run as root with:
+# ./jes.bang [--option [--..]]
 
-    Options:
-      --ignore - Do NOT stop on any errors found
-      --nobugcheck - Do NOT install listbugs to check for known issues
-      --interactive - Stop and wait for user after each install piece"
-    exit 1
+Options:
+--ignore - Do NOT stop on any errors found
+--nobugcheck - Do NOT install listbugs to check for known issues
+--interactive - Stop and wait for user after each install piece"
+exit 1
 }
 
 # Handle command line arguments
@@ -155,10 +158,10 @@ apt-get upgrade
 apt_get_runner policykit-1
 
 if [ "$bugcheck_flag" == "y" ]; then
-    echo "***** ALIAS SETUP *****"
-    echo alias hld='echo "alias hld = sudo apt-mark hold app_name" ; sudo apt-mark hold' >> ~/.bashrc 
-    echo alias unhld='echo "alias unhld = sudo apt-mark unhold app_name" ; sudo apt-mark unhold' >> ~/.bashrc 
-    apt_get_runner apt-listbugs
+  echo "***** ALIAS SETUP *****"
+  echo alias hld='echo "alias hld = sudo apt-mark hold app_name" ; sudo apt-mark hold' >> ~/.bashrc 
+  echo alias unhld='echo "alias unhld = sudo apt-mark unhold app_name" ; sudo apt-mark unhold' >> ~/.bashrc 
+  apt_get_runner apt-listbugs
 fi
 
 # Enable non-free repo - for unrar and flashplayer
